@@ -17,7 +17,7 @@ def calc_scale(frame):
     h = frame.shape[0]
     scale_w = 1920 / w
     scale_h = 1080 / h
-    return min(scale_w, scale_h, 1)
+    return min(scale_w, scale_h, 1) * 0.2  # Scale lowered by a factor to speed up the detection
 
 
 def crop_img(frame, f):
@@ -102,18 +102,18 @@ def do_detect(stream_path):
     if frame is None:
         return 'Image {} not found'.format(stream_path)
 
-    # start_time = time.time()
-    # print("Scale: ", calc_scale(frame))
+    start_time = time.time()
+    print("Scale: ", calc_scale(frame))
     faces = rf.detect_faces(frame, thresh=0.1, scale=calc_scale(frame))
 
-    # print("--- %s seconds ---" % (time.time() - start_time))
+    print("--- %s seconds ---" % (time.time() - start_time))
     # print('[i] ==> # detected faces: {}'.format(len(faces)))
 
     if len(faces) == 0 or len(faces) > 1:
         return "No/multiple faces detected"
 
     f = faces[0]
-    # print(f.det_score)
+    print(f.det_score)
     # draw_marks(frame, f, blur_faces)
 
     err = check_face_alignment(f)
