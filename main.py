@@ -5,7 +5,7 @@ import time
 from utils import *
 
 # IMAGE_PADDING_LEFT_RIGHT = 0.5
-IMAGE_PADDING_UP_DOWN = 0.4
+IMAGE_PADDING_UP_DOWN = 0.6
 IMG_W_TO_H_RATIO = 2.5 / 3.5
 
 MAX_EYES_Y_DIFF_PCT = 5
@@ -35,8 +35,8 @@ def crop_img(frame, f):
     x = left
     w = right - left
 
-    y_start = (y - h * pad_ud) * 0.95
-    y_end = ((y + h) + h * pad_ud) * 0.95
+    y_start = y - h * pad_ud
+    y_end = (y + h) + h * pad_ud
 
     i_h = y_end - y_start
     i_w = i_h * IMG_W_TO_H_RATIO
@@ -102,7 +102,7 @@ def do_detect(stream_path):
     if frame is None:
         return 'Image {} not found'.format(stream_path)
 
-    start_time = time.time()
+    # start_time = time.time()
     # print("Scale: ", calc_scale(frame))
     faces = rf.detect_faces(frame, thresh=0.1, scale=calc_scale(frame))
 
@@ -124,15 +124,13 @@ def do_detect(stream_path):
     if err is not None:
         return err
 
-    # print('==> All done!')
-    # print('***********************************************************')
     cv2.imwrite('imgs/new/' + stream_path, scale_img(frame))
     return None
 
 
 if __name__ == '__main__':
     # """
-    for i in ['1.jpg', 'a.jpg', 'j.jpg', 'm.jpg', 'r.jpeg', 'w.jpg', 's1.jpg', 's2.jpg', 'l1.jpg', 'l2.jpg', 'l3.jpg']:
+    for i in ['1.jpg', 'a.jpg', 'j.jpg', 'm.jpg', 'w.jpg', 's1.jpg', 's2.jpg', 'l1.jpg', 'l2.jpg', 'l3.jpg']:
         msg = do_detect(i)
         if msg is not None:
             print(msg)
