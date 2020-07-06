@@ -1,10 +1,8 @@
 import insightface
-import cv2
-import numpy as np
-
 
 # https://github.com/deepinsight/insightface/tree/master/RetinaFace
 # RetinaFace and ArcFace
+
 
 def __load_model():
     fa = insightface.app.FaceAnalysis()
