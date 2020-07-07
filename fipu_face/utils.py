@@ -82,3 +82,10 @@ def draw_marks(frame, f, blur_faces):
             if l == 0 or l == 3:
                 color = (0, 255, 0)
             cv2.circle(frame, (landmark[l][0], landmark[l][1]), 1, color, 50)
+
+
+def draw_ellipses(imc, frame):
+    w = frame.shape[1]
+    h = frame.shape[0]
+    ax_len = (int(np.max(imc.hh_range) / imc.h * h / 2), int(np.max(imc.hw_range) / imc.w * w / 2))
+    cv2.ellipse(frame, (int(w / 2), int(h / 2)), ax_len, 90, 0, 360, COLOR_RED, 1)

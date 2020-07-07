@@ -4,6 +4,7 @@ import time
 from fipu_face.utils import *
 from fipu_face.img_utils import *
 from exceptions.image_exception import ImageException
+from fipu_face.img_config import *
 
 IMAGE_PADDING_UP_DOWN = 0.5
 
@@ -14,6 +15,8 @@ IMG_WIDTH = 25
 IMG_HEIGHT = 30
 IMG_DPI = 300
 INCH = 25.4
+
+IMG_CONFIG = Img35x45_11Plus
 
 
 def crop_img(frame, f):
@@ -39,12 +42,64 @@ def crop_img(frame, f):
     x_start = x - abs(w - i_w) / 2
     x_end = right + abs(w - i_w) / 2
 
+    return __do_crop(frame, x_start, x_end, y_start, y_end)
+
+
+def __do_crop(frame, x_start, x_end, y_start, y_end):
     if min(y_start, x_start) < 0 or x_end > frame.shape[1] or y_end > frame.shape[0]:
         # print(y_start, x_start, x_end, y_end)
         raise ImageException("Slikano preblizu ili nije centrirano")
 
     frame = frame[int(y_start):int(y_end), int(x_start):int(x_end)]
     return frame
+
+
+def mup_crop(frame, f):
+    imc = IMG_CONFIG
+
+    left = f.bbox[0] * 0.99
+    top = f.bbox[1] * 0.99
+    right = f.bbox[2] * 1.01
+    bottom = f.bbox[3] * 1.01
+
+    y = top
+    h = bottom - top
+
+    x = left
+    w = right - left
+
+    imw_pct = np.min(imc.hw_range) / imc.w
+    imh_pct = np.min(imc.hh_range) / imc.h
+
+    max_i_h_pct = np.max(imc.hh_range) / imc.h
+    total_h_diff_pct = max_i_h_pct - imh_pct + (1 - max_i_h_pct)
+
+    total_h_diff = total_h_diff_pct / imh_pct * h
+    head_to_max = (max_i_h_pct - imh_pct) / (1 - imh_pct) * total_h_diff
+    pad_tb = (total_h_diff - head_to_max) / 2
+
+    y_start = top - head_to_max - pad_tb
+    y_end = bottom + pad_tb
+
+    i_h = y_end - y_start
+    i_w = i_h * (imc.w / imc.h)
+
+    x_start = x - abs(w - i_w) / 2
+    x_end = right + abs(w - i_w) / 2
+
+    """
+    print(imc.hh_range[0] / imc.h, h / i_h, imc.hh_range[1] / imc.h)
+    print(imc.hw_range[0] / imc.w, w / i_w, imc.hw_range[1] / imc.w)
+
+    print(imh_pct, h / i_h, imc.hh_range[0] / imc.h <= h / i_h <= imc.hh_range[1] / imc.h)
+    print(imw_pct, w / (x_end - x_start), imc.hw_range[0] / imc.w <= w / (x_end - x_start) <= imc.hw_range[1] / imc.w)
+
+    print(imc.w / imc.h, i_w / i_h)
+    print(pad_tb / i_h, (1 - np.max(imc.hh_range) / imc.h) / 2)
+
+    print("Ratio: ", imc.w / imc.h, i_w / i_h)
+    """
+    return __do_crop(frame, x_start, x_end, y_start, y_end)
 
 
 def scale_img(frame):
@@ -98,7 +153,9 @@ def detect(frame):
     check_face_alignment(f)
 
     frame = crop_img(frame, f)
+    # frame = mup_crop(frame, f)
     frame = scale_img(frame)
+    # draw_ellipses(IMG_CONFIG, frame)
 
     return frame
 
