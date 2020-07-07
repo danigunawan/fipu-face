@@ -70,6 +70,9 @@ def scale_img(frame):
 
 def check_face_alignment(f):
     l = f.landmark.astype(np.int)
+    if len(l) < 5:
+        raise ImageException("Nisu očitana sva obilježja lica (oči, nos, usta)")
+
     left_eye = l[0]
     right_eye = l[1]
     nose = l[2]
@@ -104,7 +107,7 @@ def detect(frame):
 
     f = faces[0]
     # print(f.det_score)
-    draw_marks(frame, f, False)
+    # draw_marks(frame, f, False)
 
     check_face_alignment(f)
 
