@@ -97,7 +97,7 @@ if __name__ == '__main__':
 
 ## Future features
 
-[ ] - Image cropping for [official documents](https://mup.gov.hr/UserDocsImages/BannerZona/Upute%20za%20fotografije%202013%20(2).pdf) (in Croatia) - `mup-test` branch
+- [ ] - Image cropping for [official documents](https://mup.gov.hr/UserDocsImages/BannerZona/Upute%20za%20fotografije%202013%20(2).pdf) (in Croatia) - `mup-test` branch
 
 
 
