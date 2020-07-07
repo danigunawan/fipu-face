@@ -45,13 +45,13 @@ def crop_img(frame, f):
     w = right - left
 
     y_start = y - h * pad_ud
-    y_end = (y + h) + h * pad_ud
+    y_end = bottom + h * pad_ud
 
     i_h = y_end - y_start
     i_w = i_h * (IMG_WIDTH / IMG_HEIGHT)
 
-    x_start = abs(x - abs(w - i_w) / 2)
-    x_end = abs(right + abs(w - i_w) / 2)
+    x_start = x - abs(w - i_w) / 2
+    x_end = right + abs(w - i_w) / 2
 
     if min(y_start, x_start) < 0 or x_end > frame.shape[1] or y_end > frame.shape[0]:
         # print(y_start, x_start, x_end, y_end)
@@ -63,7 +63,7 @@ def crop_img(frame, f):
 
 def scale_img(frame):
     img_res = (round(IMG_WIDTH / INCH * IMG_DPI), round(IMG_HEIGHT / INCH * IMG_DPI))
-    print(img_res)
+    # print(img_res)
     frame = cv2.resize(frame, img_res)
     return frame
 
@@ -93,10 +93,10 @@ def check_face_alignment(f):
 
 def detect(frame):
     start_time = time.time()
-    print("Scale: ", calc_scale(frame))
+    # print("Scale: ", calc_scale(frame))
     faces = rf.detect_faces(frame, thresh=0.1, scale=calc_scale(frame))
 
-    print("--- %s seconds ---" % (time.time() - start_time))
+    # print("--- %s seconds ---" % (time.time() - start_time))
     # print('[i] ==> # detected faces: {}'.format(len(faces)))
 
     if len(faces) == 0 or len(faces) > 1:
@@ -104,7 +104,7 @@ def detect(frame):
 
     f = faces[0]
     # print(f.det_score)
-    # draw_marks(frame, f, blur_faces)
+    draw_marks(frame, f, False)
 
     check_face_alignment(f)
 
@@ -181,10 +181,10 @@ def do_detect(stream_path):
 
 if __name__ == '__main__':
     # """
-    for i in ['1.jpg', 'a.jpg', 'j.jpg', 'm.jpg', 'w.jpg', 's1.jpg', 's2.jpg', 'l1.jpg', 'l2.jpg', 'l3.jpg']:
-        do_detect(i)
+    # for i in ['1.jpg', 'a.jpg', 'j.jpg', 'm.jpg', 'w.jpg', 's1.jpg', 's2.jpg', 'l1.jpg', 'l2.jpg', 'l3.jpg']:
+    #    do_detect(i)
     # """
-    # do_detect('a.jpg')
+    do_detect('n.jpg')
 
 """
 img = cv2.imread('imgs/w.jpg')
