@@ -67,7 +67,7 @@ def handle_file():
         return resp
 
 
-@app.route('/face-upload', methods=['POST'])
+@app.route('/crop-face', methods=['POST'])
 def upload_file():
     if is_file():
         return handle_file()

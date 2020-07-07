@@ -2,3 +2,4 @@ opencv-python
 flask
 insightface==0.1.5
 mxnet
+numpy
