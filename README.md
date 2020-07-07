@@ -18,9 +18,9 @@ If none of the errors are detected on the image, the face is cropped and resized
 
 
 
-##### The repo also provides Flask API which crops the image and returns the processed image as the response in either `base64` or `bytes` format.
+#### The repo also provides Flask API which crops the image and returns the processed image as the response in either `base64` or `bytes` format.
 
-###### Service supports uploading a file on the route `crop-face` with following options:
+##### Service supports uploading a file on the route `crop-face` with following options:
 
 1. Uploading a file through a form (param name ***img***)
 2. Uploading a file in base64 encoding using form/json (param name ***img64***)
@@ -70,9 +70,10 @@ Response returns two types of json objects:
 ![Croped image](imgs/new/l2.jpg)
 
 
+---
 
 
-## Testing your own image
+## Cropping your own image
 
 Place your image in `imgs` folder and run `test.py` with the name of your image. New image would be placed under the same name in `imgs/new` folder.
 
@@ -96,7 +97,7 @@ if __name__ == '__main__':
 
 ## Future features
 
-[ ] - Image cropping for [official documents]([https://mup.gov.hr/UserDocsImages/BannerZona/Upute%20za%20fotografije%202013%20(2).pdf](https://mup.gov.hr/UserDocsImages/BannerZona/Upute za fotografije 2013 (2).pdf)) (in Croatia) - `mup-test` branch
+[ ] - Image cropping for [official documents](https://mup.gov.hr/UserDocsImages/BannerZona/Upute%20za%20fotografije%202013%20(2).pdf) (in Croatia) - `mup-test` branch
 
 
 
