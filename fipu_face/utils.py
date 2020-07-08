@@ -84,7 +84,7 @@ def draw_marks(frame, f, blur_faces):
             cv2.circle(frame, (landmark[l][0], landmark[l][1]), 1, color, 50)
 
 
-def draw_ellipses(imc, frame):
+def draw_ellipses(frame, imc):
     w = frame.shape[1]
     h = frame.shape[0]
     ax_len = (int(np.max(imc.hh_range) / imc.h * h / 2), int(np.max(imc.hw_range) / imc.w * w / 2))

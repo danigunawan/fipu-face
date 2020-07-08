@@ -11,14 +11,10 @@ IMAGE_PADDING_UP_DOWN = 0.5
 MAX_EYES_Y_DIFF_PCT = 5
 MAX_NOSE_EYES_DIST_DIFF_PCT = 10
 
-IMG_WIDTH = 25
-IMG_HEIGHT = 30
-IMG_DPI = 300
+
 INCH = 25.4
 
-IMG_CONFIG = Img35x45_11Plus
-
-
+"""
 def crop_img(frame, f):
     pad_ud = IMAGE_PADDING_UP_DOWN
 
@@ -43,19 +39,11 @@ def crop_img(frame, f):
     x_end = right + abs(w - i_w) / 2
 
     return __do_crop(frame, x_start, x_end, y_start, y_end)
+"""
 
 
-def __do_crop(frame, x_start, x_end, y_start, y_end):
-    if min(y_start, x_start) < 0 or x_end > frame.shape[1] or y_end > frame.shape[0]:
-        # print(y_start, x_start, x_end, y_end)
-        raise ImageException("Slikano preblizu ili nije centrirano")
-
-    frame = frame[int(y_start):int(y_end), int(x_start):int(x_end)]
-    return frame
-
-
-def mup_crop(frame, f):
-    imc = IMG_CONFIG
+def crop_img(frame, f, imc):
+    # imc = IMG_CONFIG
 
     left = f.bbox[0] * 0.99
     top = f.bbox[1] * 0.99
@@ -102,8 +90,17 @@ def mup_crop(frame, f):
     return __do_crop(frame, x_start, x_end, y_start, y_end)
 
 
-def scale_img(frame):
-    img_res = (round(IMG_WIDTH / INCH * IMG_DPI), round(IMG_HEIGHT / INCH * IMG_DPI))
+def __do_crop(frame, x_start, x_end, y_start, y_end):
+    if min(y_start, x_start) < 0 or x_end > frame.shape[1] or y_end > frame.shape[0]:
+        # print(y_start, x_start, x_end, y_end)
+        raise ImageException("Slikano preblizu ili nije centrirano")
+
+    frame = frame[int(y_start):int(y_end), int(x_start):int(x_end)]
+    return frame
+
+
+def scale_img(frame, imc):
+    img_res = (round(imc.w / INCH * IMG_DPI), round(imc.h / INCH * IMG_DPI))
     # print(img_res)
     frame = cv2.resize(frame, img_res)
     return frame
@@ -135,7 +132,7 @@ def check_face_alignment(f):
         raise ImageException("Ne gleda ravno")
 
 
-def detect(frame):
+def detect(frame, imc=ImgX):
     # start_time = time.time()
     # print("Scale: ", calc_scale(frame))
     faces = rf.detect_faces(frame, thresh=0.1, scale=calc_scale(frame))
@@ -148,39 +145,42 @@ def detect(frame):
 
     f = faces[0]
     # print(f.det_score)
-    # draw_marks(frame, f, False)
+    draw_marks(frame, f, False)
 
     check_face_alignment(f)
 
-    frame = crop_img(frame, f)
-    # frame = mup_crop(frame, f)
-    frame = scale_img(frame)
-    # draw_ellipses(IMG_CONFIG, frame)
+    # frame = crop_img(frame, f)
+    frame = crop_img(frame, f, imc)
+    frame = scale_img(frame, imc)
+    # draw_ellipses(frame, imc)
 
     return frame
 
 
-def __do_detect(frame, encoding=ENCODING_BASE64):
-    frame = detect(frame)
+def __do_detect(frame, img_format=IMG_FORMAT_X, encoding=ENCODING_BASE64):
+    frame = detect(frame, get_format(img_format))
     return convert_img(frame, encoding)
 
 
-def get_from_file(file, encoding=ENCODING_BASE64):
-    return __do_detect(cv2_read_img(file.read()), encoding)
+def get_from_file(file, img_format=IMG_FORMAT_X, encoding=ENCODING_BASE64):
+    return __do_detect(cv2_read_img(file.read()), img_format, encoding)
 
 
-def get_from_base64(uri, encoding=ENCODING_BASE64):
+def get_from_base64(uri, img_format=IMG_FORMAT_X, encoding=ENCODING_BASE64):
+    # Just in case the uri contains base64 prefix, split and take the last part
     encoded_data = uri.split('base64,')[-1]
     try:
         img = cv2_read_img(base64.b64decode(encoded_data))
     except:
         raise ImageException("Invalid base64 encoded image")
 
-    return __do_detect(img, encoding)
+    return __do_detect(img, img_format, encoding)
 
 
-def get_from_bytes(img_bytes, encoding=ENCODING_BASE64):
+def get_from_bytes(img_bytes, img_format=IMG_FORMAT_X, encoding=ENCODING_BASE64):
     try:
-        return __do_detect(img_bytes, encoding)
+        return __do_detect(img_bytes, img_format, encoding)
     except:
         raise ImageException("Invalid image bytes")
+
+
