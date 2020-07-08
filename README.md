@@ -53,22 +53,7 @@ Response returns two types of json objects:
 
 
 
-## Examples
-
-##### Original image
-
-![Original image](imgs/w.jpg)
-
-
-
-##### Croped and resized image
-
-Solarized dark             |  Solarized Ocean
-:-------------------------:|:-------------------------:
-![Croped image](imgs/new/w.jpg)  |  ![Croped image](imgs/new/w.jpg)
-
-
-
+## Example
 
 
 ##### Original image
@@ -79,7 +64,9 @@ Solarized dark             |  Solarized Ocean
 
 ##### Croped and resized image
 
-![Croped image](imgs/new/l2.jpg)
+  25x30@300dpi             |  30x35@300dpi            |  35x45@300dpi           |
+:-------------------------:|:-------------------------:-------------------------:
+![Croped image](imgs/crop/l2.jpg) | ![Croped image](imgs/crop/l230x35.jpg) | ![Croped image](imgs/crop/l235x45.jpg)
 
 
 ---
