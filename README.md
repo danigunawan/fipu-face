@@ -2,7 +2,7 @@
 
 # FIPU face
 
-Face detection using [RetinaFace](https://github.com/deepinsight/insightface/tree/master/RetinaFace) and image cropping to the **25x30@300dpi**.
+Face detection using [RetinaFace](https://github.com/deepinsight/insightface/tree/master/RetinaFace) and image cropping to the desired format **@300dpi**.
 
 FIPU face detects possible errors in the image:
 
