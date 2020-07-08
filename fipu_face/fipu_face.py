@@ -6,6 +6,7 @@ from fipu_face.img_utils import *
 from exceptions.image_exception import ImageException
 from fipu_face.img_config import *
 from fipu_face.facial_landmarks.emotion import *
+from fipu_face.facial_landmarks.glasses import has_glasses
 
 IMAGE_PADDING_UP_DOWN = 0.5
 
@@ -129,16 +130,23 @@ def check_face_alignment(f):
         raise ImageException("Glava je nakrivljena")
 
     if nose[0] < left_eye[0] or nose[0] > right_eye[0] or nose_tilt > MAX_NOSE_EYES_DIST_DIFF_PCT:
-        raise ImageException("Ne gleda ravno")
+        raise ImageException("Potrebno je gledati prema kameri")
 
 
 def check_face_emotion(frame, f, imc):
     emotion = detect_emotion(frame, f)
     if emotion not in imc.allowed_emotions:
         if emotion == EMOTION_NONE:
-            raise ImageException("Nemoguće očitati emociju. Maknite sve predmete koji sakrivaju lice (maska, ruke itd.)")
+            raise ImageException(
+                "Nemoguće očitati emociju. Maknite sve predmete koji sakrivaju lice (maska, ruke itd.)")
         else:
-            raise ImageException("Nedozvoljena emocija {}. Dozvoljene emocije: {}".format(emotion, imc.allowed_emotions))
+            raise ImageException(
+                "Nedozvoljena emocija {}. Dozvoljene emocije: {}".format(emotion, imc.allowed_emotions))
+
+
+def check_face_obstacles(frame, f, imc):
+    if not imc.glasses and has_glasses(frame, f):
+        raise ImageException("Nočale nisu dozvoljene.")
 
 
 def detect(frame, imc=ImgX):
@@ -155,9 +163,9 @@ def detect(frame, imc=ImgX):
     f = faces[0]
     # print(f.det_score)
     # draw_marks(frame, f, False)
-
     check_face_alignment(f)
     check_face_emotion(frame, f, imc)
+    check_face_obstacles(frame, f, imc)
 
     # frame = crop_img(frame, f)
     frame = crop_img(frame, f, imc)

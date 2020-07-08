@@ -109,6 +109,12 @@ if __name__ == '__main__':
 
 
 
+## References
+
+- [RetinaFace](https://github.com/deepinsight/insightface/tree/master/RetinaFace) - Face detection
+- [FER](https://pypi.org/project/fer/) - Facial expression recognition
+- [Real-time Glasses Detection](https://github.com/TianxingWu/realtime-glasses-detection) - Glasses detection (in progress)
+- [Flask](https://flask.palletsprojects.com/en/1.1.x/) - API
 
 
 
