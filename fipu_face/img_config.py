@@ -23,7 +23,7 @@ IMG_FORMAT_35x45_11 = '35x45_11'
 
 
 class ImgConfig:
-    def __init__(self, width, height, hw_range, hh_range, emotions=tuple(EMOTION_NEUTRAL), glasses=False):
+    def __init__(self, width, height, hw_range, hh_range, emotions=tuple([EMOTION_NEUTRAL]), glasses=False):
         self.w = width
         self.h = height
         self.hw_range = hw_range
