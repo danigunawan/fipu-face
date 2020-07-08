@@ -5,12 +5,12 @@ from fipu_face.utils import *
 from fipu_face.img_utils import *
 from exceptions.image_exception import ImageException
 from fipu_face.img_config import *
+from fipu_face.facial_landmarks.emotion import *
 
 IMAGE_PADDING_UP_DOWN = 0.5
 
 MAX_EYES_Y_DIFF_PCT = 5
 MAX_NOSE_EYES_DIST_DIFF_PCT = 10
-
 
 INCH = 25.4
 
@@ -132,6 +132,15 @@ def check_face_alignment(f):
         raise ImageException("Ne gleda ravno")
 
 
+def check_face_emotion(frame, f, imc):
+    emotion = detect_emotion(frame, f)
+    if emotion not in imc.allowed_emotions:
+        if emotion == EMOTION_NONE:
+            raise ImageException("Nemoguće očitati emociju. Maknite sve predmete koji sakrivaju lice (maska, ruke itd.)")
+        else:
+            raise ImageException("Nedozvoljena emocija {}. Dozvoljene emocije: {}".format(emotion, imc.allowed_emotions))
+
+
 def detect(frame, imc=ImgX):
     # start_time = time.time()
     # print("Scale: ", calc_scale(frame))
@@ -145,9 +154,10 @@ def detect(frame, imc=ImgX):
 
     f = faces[0]
     # print(f.det_score)
-    draw_marks(frame, f, False)
+    # draw_marks(frame, f, False)
 
     check_face_alignment(f)
+    check_face_emotion(frame, f, imc)
 
     # frame = crop_img(frame, f)
     frame = crop_img(frame, f, imc)
@@ -182,5 +192,3 @@ def get_from_bytes(img_bytes, img_format=IMG_FORMAT_X, encoding=ENCODING_BASE64)
         return __do_detect(img_bytes, img_format, encoding)
     except:
         raise ImageException("Invalid image bytes")
-
-

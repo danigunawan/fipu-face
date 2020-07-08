@@ -11,6 +11,8 @@
 # sirina glave: 17.5-25
 # visina glave: 31.5-36 (beba(<11 god): 22.5-36)
 
+from fipu_face.facial_landmarks.emotion import *
+
 IMG_DPI = 300
 
 IMG_FORMAT_X = 'x'
@@ -21,11 +23,12 @@ IMG_FORMAT_35x45_11 = '35x45_11'
 
 
 class ImgConfig:
-    def __init__(self, width, height, hw_range, hh_range):
+    def __init__(self, width, height, hw_range, hh_range, emotions=tuple(EMOTION_NEUTRAL)):
         self.w = width
         self.h = height
         self.hw_range = hw_range
         self.hh_range = hh_range
+        self.allowed_emotions = emotions
 
 
 Img30x35_11Plus = ImgConfig(width=30,
@@ -51,7 +54,8 @@ Img35x45_11 = ImgConfig(width=35,
 ImgX = ImgConfig(width=25,
                  height=30,
                  hw_range=(12.5, 13.5),
-                 hh_range=(15.5, 16.5))
+                 hh_range=(15.5, 16.5),
+                 emotions=(EMOTION_NEUTRAL, EMOTION_HAPPY))
 
 __all_formats = {
     IMG_FORMAT_X: ImgX,
