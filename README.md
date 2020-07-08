@@ -14,7 +14,14 @@ FIPU face detects possible errors in the image:
 
 
 
-If none of the errors are detected on the image, the face is cropped and resized to match the `25x30@300dpi` format.
+If none of the errors are detected on the image, the face is cropped and resize'd to the desired format.
+
+Supported formats:
+- **x** (25x30)
+- **30x35_11Plus**
+- **30x35_11**
+- **35x45_11Plus**
+- **35x45_11**
 
 
 
@@ -25,7 +32,8 @@ If none of the errors are detected on the image, the face is cropped and resized
 1. Uploading a file through a form (param name ***img***)
 2. Uploading a file in base64 encoding using form/json (param name ***img64***)
 3. Uploading a file encoded as bytes using form/json (param name ***img_bytes***)
-4. Specifiying output encoding using form/json (param name ***resp_enc\***)
+4. Specifying output encoding using form/json (param name ***resp_enc***)
+5. Specifying image format using form/json (param name **img_fmt**)
 
 Response returns two types of json objects:
 
