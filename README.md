@@ -64,9 +64,10 @@ Response returns two types of json objects:
 
 ##### Croped and resized image
 
-  25x30@300dpi             |  30x35@300dpi            |  35x45@300dpi           |
-:-------------------------:|:-------------------------:-------------------------:
-![Croped image](imgs/crop/l2.jpg) | ![Croped image](imgs/crop/l230x35.jpg) | ![Croped image](imgs/crop/l235x45.jpg)
+|           25x30@300dpi            | 30x35@300dpi                           | 35x45@300dpi                           |
+| :-------------------------------: | -------------------------------------- | -------------------------------------- |
+| ![Croped image](imgs/crop/l2.jpg) | ![Croped image](imgs/crop/l230x35.jpg) | ![Croped image](imgs/crop/l235x45.jpg) |
+
 
 
 ---
