@@ -63,7 +63,11 @@ Response returns two types of json objects:
 
 ##### Croped and resized image
 
-![Croped image](imgs/new/w.jpg)
+Solarized dark             |  Solarized Ocean
+:-------------------------:|:-------------------------:
+![Croped image](imgs/new/w.jpg)  |  ![Croped image](imgs/new/w.jpg)
+
+
 
 
 
