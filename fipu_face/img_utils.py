@@ -13,7 +13,7 @@ def calc_scale(frame):
     h = frame.shape[0]
     scale_w = 1920 / w
     scale_h = 1080 / h
-    return min(scale_w, scale_h, 1) * 0.3  # Scale lowered by a factor to speed up the detection
+    return min(scale_w, scale_h, 1) * 0.25  # Scale lowered by a factor to speed up the detection
 
 
 def cv2_read_img(stream):

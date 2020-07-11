@@ -161,16 +161,17 @@ def detect(frame, imc=ImgX):
         raise ImageException("Nije pronađeno lice ili je pronađeno više od jednog lica")
 
     f = faces[0]
-    # print(f.det_score)
+    print(f.det_score)
     # draw_marks(frame, f, False)
     check_face_alignment(f)
-    check_face_emotion(frame, f, imc)
-    check_face_obstacles(frame, f, imc)
+    # check_face_emotion(frame, f, imc)
+    # check_face_obstacles(frame, f, imc)
 
     # frame = crop_img(frame, f)
     frame = crop_img(frame, f, imc)
     frame = scale_img(frame, imc)
     # draw_ellipses(frame, imc)
+    # print("--- %s seconds ---" % (time.time() - start_time))
 
     return frame
 
