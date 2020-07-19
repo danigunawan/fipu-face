@@ -5,7 +5,6 @@ from fipu_face.utils import *
 from fipu_face.img_utils import *
 from exceptions.image_exception import ImageException
 from fipu_face.img_config import *
-# from fipu_face.facial_landmarks.head_pose import is_not_looking_straight
 
 # from fipu_face.facial_landmarks.emotion import *
 # from fipu_face.facial_landmarks.glasses import has_glasses
@@ -141,8 +140,11 @@ def check_face_alignment(frame, f):
     if nose[0] < left_eye[0] or nose[0] > right_eye[0] or nose_tilt > MAX_NOSE_EYES_DIST_DIFF_PCT:
         raise ImageException("Potrebno je gledati prema kameri")
 
-    # if is_not_looking_straight(frame, f):
-    #     raise ImageException("Potrebno je gledati prema kameri 2")
+    # mouth = (left_lip[1] + right_lip[1]) / 2
+    # eyes = (left_eye[1] + right_eye[1]) / 2
+    # print(np.mean(left_lip, right_lip))
+
+    # print("Diff: ", nose[1] - eyes,  mouth - nose[1])
 
 
 """
@@ -165,15 +167,19 @@ def check_face_obstacles(frame, f, imc):
 
 
 def detect(frame, imc=ImgX):
-    start_time = time.time()
+    # start_time = time.time()
     # print("Scale: ", calc_scale(frame))
-    faces = rf.detect_faces(frame, thresh=0.1, scale=calc_scale(frame))
+    faces = rf.detect_faces(frame, scale=calc_scale(frame))
 
     # print("--- %s seconds ---" % (time.time() - start_time))
     # print('[i] ==> # detected faces: {}'.format(len(faces)))
 
     if len(faces) == 0 or len(faces) > 1:
-        raise ImageException("Nije pronađeno lice ili je pronađeno više od jednog lica")
+        # for f in faces:
+        #     print(len(f.landmark), f.det_score)
+        #     draw_marks(frame, f, False)
+        # cv2.imwrite('imgs/new/'+str(start_time)+'.jpg', frame)
+        raise ImageException("Nije pronađeno lice ili je pronađeno više od jednog lica. Pronađeno {} lica".format(len(faces)))
 
     f = faces[0]
     # print(f.det_score)

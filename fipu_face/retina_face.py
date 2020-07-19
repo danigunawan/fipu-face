@@ -13,7 +13,7 @@ def __load_model():
 __model = __load_model()
 
 
-def detect_faces(frame, thresh=0.1, scale=1):
+def detect_faces(frame, thresh=0.89, scale=1):
     faces = __model.get(frame,
                         det_thresh=thresh,
                         det_scale=scale
