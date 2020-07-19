@@ -5,8 +5,10 @@ from fipu_face.utils import *
 from fipu_face.img_utils import *
 from exceptions.image_exception import ImageException
 from fipu_face.img_config import *
-from fipu_face.facial_landmarks.emotion import *
-from fipu_face.facial_landmarks.glasses import has_glasses
+# from fipu_face.facial_landmarks.head_pose import is_not_looking_straight
+
+# from fipu_face.facial_landmarks.emotion import *
+# from fipu_face.facial_landmarks.glasses import has_glasses
 
 IMAGE_PADDING_UP_DOWN = 0.5
 
@@ -107,7 +109,7 @@ def scale_img(frame, imc):
     return frame
 
 
-def check_face_alignment(f):
+def check_face_alignment(frame, f):
     l = f.landmark.astype(np.int)
     if len(l) < 5:
         raise ImageException("Nisu očitana sva obilježja lica (oči, nos, usta)")
@@ -115,24 +117,35 @@ def check_face_alignment(f):
     left_eye = l[0]
     right_eye = l[1]
     nose = l[2]
-    # left_lip = l[3]
-    # right_lip = l[4]
+    left_lip = l[3]
+    right_lip = l[4]
 
-    f_w = f.bbox[2] - f.bbox[0]
-    f_h = f.bbox[3] - f.bbox[1]
+    f_w = f.bbox[2] - f.bbox[0]  # Face width
+    f_h = f.bbox[3] - f.bbox[1]  # Face height
 
+    # Eyes should be leveled - at least within the MAX_EYES_Y_DIFF_PCT percentage
     eyes_tilt = abs(left_eye[1] - right_eye[1]) / f_h * 100
-    nose_tilt = abs(abs(nose[0] - left_eye[0]) - abs(nose[0] - right_eye[0])) / f_w * 100
 
     # print("Eyes: ", eyes_tilt, "Nose-Eyes: ", nose_tilt)
 
     if eyes_tilt > MAX_EYES_Y_DIFF_PCT:
         raise ImageException("Glava je nakrivljena")
 
+    # Is the nose looking left or right?
+    # Calculate the difference between the (left_eye-nose) and (right_eye-nose)
+    # The percentage in differences between eyes and the nose should be less than MAX_NOSE_EYES_DIST_DIFF_PCT
+    nose_tilt = abs(abs(nose[0] - left_eye[0]) - abs(nose[0] - right_eye[0])) / f_w * 100
+
+    # If the nose x position is smaller than the left eye x position or greater than the right eye y position
+    # then the person is looking to the side, otherwise it still may be a slight head tilt to either side
     if nose[0] < left_eye[0] or nose[0] > right_eye[0] or nose_tilt > MAX_NOSE_EYES_DIST_DIFF_PCT:
         raise ImageException("Potrebno je gledati prema kameri")
 
+    # if is_not_looking_straight(frame, f):
+    #     raise ImageException("Potrebno je gledati prema kameri 2")
 
+
+"""
 def check_face_emotion(frame, f, imc):
     emotion = detect_emotion(frame, f)
     if emotion not in imc.allowed_emotions:
@@ -142,15 +155,17 @@ def check_face_emotion(frame, f, imc):
         else:
             raise ImageException(
                 "Nedozvoljena emocija {}. Dozvoljene emocije: {}".format(emotion, imc.allowed_emotions))
-
+"""
+"""
 
 def check_face_obstacles(frame, f, imc):
     if not imc.glasses and has_glasses(frame, f):
         raise ImageException("Nočale nisu dozvoljene.")
+"""
 
 
 def detect(frame, imc=ImgX):
-    # start_time = time.time()
+    start_time = time.time()
     # print("Scale: ", calc_scale(frame))
     faces = rf.detect_faces(frame, thresh=0.1, scale=calc_scale(frame))
 
@@ -161,16 +176,16 @@ def detect(frame, imc=ImgX):
         raise ImageException("Nije pronađeno lice ili je pronađeno više od jednog lica")
 
     f = faces[0]
-    print(f.det_score)
-    # draw_marks(frame, f, False)
-    check_face_alignment(f)
+    # print(f.det_score)
+    draw_marks(frame, f, False)
+    check_face_alignment(frame, f)
     # check_face_emotion(frame, f, imc)
     # check_face_obstacles(frame, f, imc)
 
     # frame = crop_img(frame, f)
     frame = crop_img(frame, f, imc)
     frame = scale_img(frame, imc)
-    # draw_ellipses(frame, imc)
+    draw_ellipses(frame, imc)
     # print("--- %s seconds ---" % (time.time() - start_time))
 
     return frame

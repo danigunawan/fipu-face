@@ -5,7 +5,7 @@ import insightface
 
 
 def __load_model():
-    fa = insightface.app.FaceAnalysis()
+    fa = insightface.app.FaceAnalysis(det_name='retinaface_mnet025_v2', rec_name=None, ga_name=None)
     fa.prepare(-1)
     return fa
 

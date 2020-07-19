@@ -57,7 +57,7 @@ def draw_predict(frame, conf, left, top, right, bottom, blur=False, name=''):
     right = int(right)
     bottom = int(bottom)
     # Draw a bounding box.
-    cv2.rectangle(frame, (left, top), (right, bottom), COLOR_YELLOW, 20)
+    cv2.rectangle(frame, (left, top), (right, bottom), COLOR_YELLOW, 5)
 
     text = '{:.2f} {}'.format(conf, name)
 
@@ -81,7 +81,7 @@ def draw_marks(frame, f, blur_faces):
             color = (0, 0, 255)
             if l == 0 or l == 3:
                 color = (0, 255, 0)
-            cv2.circle(frame, (landmark[l][0], landmark[l][1]), 1, color, 50)
+            cv2.circle(frame, (landmark[l][0], landmark[l][1]), 1, color, 5)
 
 
 def draw_ellipses(frame, imc):
