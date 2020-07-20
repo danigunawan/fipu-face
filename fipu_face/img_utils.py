@@ -34,11 +34,11 @@ def calc_scale(frame):
 def cv2_read_img(stream):
     try:
         img = cv2.imdecode(np.frombuffer(stream, np.uint8), cv2.IMREAD_UNCHANGED)
-        if not img:
-            raise_error('Invalid image format/encoding')
+        if img is None:
+            raise_error(INVALID_IMAGE_FORMAT)
         return img
     except:
-        raise_error('Invalid image format/encoding')
+        raise_error(INVALID_IMAGE_FORMAT)
 
 
 # Encodes the image in the given method: ENCODING_BASE64 or ENCODING_BYTES
@@ -55,4 +55,4 @@ def convert_img(img, method):
     elif method == ENCODING_BYTES:
         return buffer.tobytes()
 
-    raise ImageException("Encoding method {} not implemented. Use {}".format(method, (ENCODING_BASE64, ENCODING_BYTES)))
+    raise_error(INVALID_ENCODING_METHOD, [method, (ENCODING_BASE64, ENCODING_BYTES)])
