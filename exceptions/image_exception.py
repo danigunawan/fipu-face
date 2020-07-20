@@ -16,7 +16,10 @@ class ImageException(Exception):
 
 
 def raise_error(msg, tokens=None):
-    detail = DETAIL_MESSAGES[msg]
+    if msg in DETAIL_MESSAGES:
+        detail = DETAIL_MESSAGES[msg]
+    else:
+        detail = msg
 
     if tokens:
         detail = detail.format(*tokens)
