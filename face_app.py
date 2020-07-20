@@ -94,7 +94,7 @@ def upload_file():
 @app.errorhandler(ImageException)
 def handle_image_exception(error):
     # Response returns a list of errors
-    response = jsonify(list(error.to_dict()))
+    response = jsonify(error.to_dict())
     response.status_code = error.status_code
     return response
 

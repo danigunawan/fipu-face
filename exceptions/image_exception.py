@@ -10,8 +10,9 @@ class ImageException(Exception):
 
     def to_dict(self):
         rv = dict(self.payload or ())
-        rv['message'] = self.message
-        rv['error_code'] = self.error_code
+        # rv['message'] = self.message
+        # rv['error_code'] = self.error_code
+        rv['errors'] = [{'message': self.message, 'error_code': self.error_code}]
         return rv
 
 
