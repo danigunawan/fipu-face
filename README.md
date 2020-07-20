@@ -6,12 +6,12 @@ Face detection using [RetinaFace](https://github.com/deepinsight/insightface/tre
 
 FIPU face detects possible errors in the image:
 
-- picture taken to close to the camera
-- head tilted to the side
-- not looking towards the camera
-- covered eyes, nose or mouth
-- multiple or no faces in the image
-- image is too blurry
+- picture taken to close to the camera (`too_close`)
+- head tilted to the side (`head_tilted`)
+- no faces in the image (`no_face`)
+- multiple faces in the image (`too_many_faces`)
+- image is too blurry (`image_blurry`)
+- eyes, nose or mouth not detected (`no_landmarks`)
 
 All errors (and appropriate messages) are stored in [ImageException.py](exceptions/image_exception.py)
 

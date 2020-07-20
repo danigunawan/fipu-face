@@ -36,6 +36,7 @@ def cv2_read_img(stream):
         img = cv2.imdecode(np.frombuffer(stream, np.uint8), cv2.IMREAD_UNCHANGED)
         if not img:
             raise_error('Invalid image format/encoding')
+        return img
     except:
         raise_error('Invalid image format/encoding')
 
