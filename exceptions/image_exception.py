@@ -1,18 +1,20 @@
 # Custom image exception class
 class ImageException(Exception):
 
-    def __init__(self, message, error_code='error', status_code=400, payload=None):
+    def __init__(self, message, error_code='error', status_code=400):  # , payload=None):
         Exception.__init__(self)
-        self.message = message
-        self.error_code = error_code
+        # self.message = message
+        # self.error_code = error_code
+        # self.payload = payload
         self.status_code = status_code
-        self.payload = payload
+        self.errors = [{'message': message, 'error_code': error_code}]
 
     def to_dict(self):
-        rv = dict(self.payload or ())
+        # rv = dict(self.payload or ())
         # rv['message'] = self.message
         # rv['error_code'] = self.error_code
-        rv['errors'] = [{'message': self.message, 'error_code': self.error_code}]
+        rv = dict()
+        rv['errors'] = self.errors
         return rv
 
 
@@ -37,6 +39,9 @@ TILTED_HEAD_EXCEPTION = "head_tilted"
 
 BLURRY_IMAGE_EXCEPTION = "image_blurry"
 
+INVALID_IMAGE_FORMAT = "invalid_image_format"
+
+INVALID_ENCODING_METHOD = "invalid_encoding_method"
 
 DETAIL_MESSAGES = {
     NO_FACES_EXCEPTION: "Nije detektirano niti jedno lice",
@@ -47,5 +52,8 @@ DETAIL_MESSAGES = {
     TILTED_HEAD_EXCEPTION: "Glava je nakrivljena. Potrebno je gledati prema kameri",
 
     BLURRY_IMAGE_EXCEPTION: "Slika je mutna",
+
+    INVALID_IMAGE_FORMAT: "Invalid image format/encoding",
+    INVALID_ENCODING_METHOD: "Encoding method {} not implemented. Use {}"
 
 }
