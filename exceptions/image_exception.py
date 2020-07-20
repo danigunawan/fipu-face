@@ -1,32 +1,47 @@
 # Custom image exception class
 class ImageException(Exception):
-    status_code = 400
 
-    def __init__(self, message, status_code=None, payload=None):
+    def __init__(self, message, error_code='error', status_code=400, payload=None):
         Exception.__init__(self)
         self.message = message
-        if status_code is not None:
-            self.status_code = status_code
+        self.error_code = error_code
+        self.status_code = status_code
         self.payload = payload
 
     def to_dict(self):
         rv = dict(self.payload or ())
         rv['message'] = self.message
+        rv['error_code'] = self.error_code
         return rv
 
 
 def raise_error(msg, tokens=None):
+    detail = DETAIL_MESSAGES[msg]
+
     if tokens:
-        msg = msg.format(*tokens)
-    raise ImageException(msg)
+        detail = detail.format(*tokens)
+    raise ImageException(message=detail, error_code=msg)
 
 
 # All errors
-NO_FACES_EXCEPTION = "Nije detektirano niti jedno lice"
-TOO_MANY_FACES_EXCEPTION = "Detektirana je previše lica ({} lica)"
+NO_FACES_EXCEPTION = "no_face"
+TOO_MANY_FACES_EXCEPTION = "too_many_faces"
 
-NO_LANDMARKS_EXCEPTION = "Nisu očitana sva obilježja lica (oči, nos, usta)"
-PICTURED_TO_CLOSE_EXCEPTION = "Slikano preblizu ili nije centrirano.\nProstor:\n- Lijevo: {}\n- Desno: {}\n- Gore: {}\n- Dolje: {}"
-TILTED_HEAD_EXCEPTION = "Glava je nakrivljena. Potrebno je gledati prema kameri"
+NO_LANDMARKS_EXCEPTION = "no_landmarks"
+PICTURED_TO_CLOSE_EXCEPTION = "too_close"
+TILTED_HEAD_EXCEPTION = "head_tilted"
 
-BLURRY_IMAGE_EXCEPTION = "Slika je mutna"
+BLURRY_IMAGE_EXCEPTION = "image_blurry"
+
+
+DETAIL_MESSAGES = {
+    NO_FACES_EXCEPTION: "Nije detektirano niti jedno lice",
+    TOO_MANY_FACES_EXCEPTION: "Detektirana je previše lica ({} lica)",
+
+    NO_LANDMARKS_EXCEPTION: "Nisu očitana sva obilježja lica (oči, nos, usta)",
+    PICTURED_TO_CLOSE_EXCEPTION: "Slikano preblizu ili nije centrirano.\nProstor:\n- Lijevo: {}\n- Desno: {}\n- Gore: {}\n- Dolje: {}",
+    TILTED_HEAD_EXCEPTION: "Glava je nakrivljena. Potrebno je gledati prema kameri",
+
+    BLURRY_IMAGE_EXCEPTION: "Slika je mutna",
+
+}
