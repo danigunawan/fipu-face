@@ -22,7 +22,7 @@ DRAW_MARKS = False
 
 
 # Crops the face based on the image configuration
-def crop_img(frame, f, imc):
+def crop_img(frame, f, imc, err):
     # Just add a little bit space around the bbox
     left = f.bbox[0] * 0.99
     top = f.bbox[1] * 0.99
@@ -85,29 +85,34 @@ def crop_img(frame, f, imc):
 
     print("Ratio: ", imc.w / imc.h, i_w / i_h)
     """
-    return __do_crop(frame, x_start, x_end, y_start, y_end)
+    return __do_crop(frame, x_start, x_end, y_start, y_end, err)
 
 
 # Does the cropping and raises the exception if the cropping points are not in the frame
-def __do_crop(frame, x_start, x_end, y_start, y_end):
+def __do_crop(frame, x_start, x_end, y_start, y_end, err):
     h, w = frame.shape[:2]
+
     # Before cropping check if the copping points are not outside the frame
     if min(y_start, x_start) < 0 or x_end > w or y_end > h:
+
         msg_fmt = lambda num: 'OK' if num >= 0 else 'NOT OK'
         # print(y_start, x_start, x_end, y_end, frame.shape[:2])
-        raise_error(PICTURED_TO_CLOSE_EXCEPTION,
-                    [msg_fmt(x_start), msg_fmt(w - x_end), msg_fmt(y_start), msg_fmt(h - y_end)])
+        err(PICTURED_TO_CLOSE_EXCEPTION, [msg_fmt(x_start), msg_fmt(w - x_end), msg_fmt(y_start), msg_fmt(h - y_end)])
+        return frame
+        # raise_error(PICTURED_TO_CLOSE_EXCEPTION, [msg_fmt(x_start), msg_fmt(w - x_end), msg_fmt(y_start), msg_fmt(h - y_end)])
 
     # Crop the image
     frame = frame[int(y_start):int(y_end), int(x_start):int(x_end)]
     return frame
 
 
-def check_face_alignment(frame, f):
+def check_face_alignment(frame, f, err):
     l = f.landmark.astype(np.int)
     # Should never happen, but just to make sure
     if len(l) < 5:
-        raise_error(NO_LANDMARKS_EXCEPTION)
+        err(NO_LANDMARKS_EXCEPTION)
+        return
+        # raise_error(NO_LANDMARKS_EXCEPTION)
 
     # Save the references to the landmarks
     left_eye = l[0]
@@ -125,9 +130,6 @@ def check_face_alignment(frame, f):
 
     # print("Eyes: ", eyes_tilt, "Nose-Eyes: ", nose_tilt)
 
-    if eyes_tilt > MAX_EYES_Y_DIFF_PCT:
-        raise_error(TILTED_HEAD_EXCEPTION)
-
     # Is the nose looking left or right?
     # Calculate the difference between the (left_eye-nose) and (right_eye-nose)
     # The percentage in differences between eyes and the nose should be less than MAX_NOSE_EYES_DIST_DIFF_PCT
@@ -135,8 +137,9 @@ def check_face_alignment(frame, f):
 
     # If the nose x position is smaller than the left eye x position or greater than the right eye y position
     # then the person is looking to the side, otherwise it still may be a slight head tilt to either side
-    if nose[0] < left_eye[0] or nose[0] > right_eye[0] or nose_tilt > MAX_NOSE_EYES_DIST_DIFF_PCT:
-        raise_error(TILTED_HEAD_EXCEPTION)
+    if eyes_tilt > MAX_EYES_Y_DIFF_PCT or nose[0] < left_eye[0] or nose[0] > right_eye[0] or nose_tilt > MAX_NOSE_EYES_DIST_DIFF_PCT:
+        err(TILTED_HEAD_EXCEPTION)
+        # raise_error(TILTED_HEAD_EXCEPTION)
 
     # mouth = (left_lip[1] + right_lip[1]) / 2
     # eyes = (left_eye[1] + right_eye[1]) / 2
@@ -148,13 +151,15 @@ def check_face_alignment(frame, f):
 # Checks whether the image is blurry
 # The blur value also depends on the image resolution,
 # so each image configuration should have its own threshold
-def check_blur(frame, imc):
+def check_blur(frame, imc, err):
     # Convert to grayscale
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     # Calculate the blur
     blur = cv2.Laplacian(gray, cv2.CV_64F).var()
+
     if blur < imc.blur_threshold:
-        raise_error(BLURRY_IMAGE_EXCEPTION)
+        err(BLURRY_IMAGE_EXCEPTION)
+        # raise_error(BLURRY_IMAGE_EXCEPTION)
 
 
 # Ensures that only one faces is detected
@@ -178,22 +183,28 @@ def detect(frame, imc=ImgX):
     check_num_faces(faces)
     f = faces[0]
     # print(f.det_score)
+    err = ImageException()
 
-    check_face_alignment(frame, f)
+    check_face_alignment(frame, f, err)
     # check_face_emotion(frame, f, imc)
     # check_face_obstacles(frame, f, imc)
 
-    frame = crop_img(frame, f, imc)
+    frame = crop_img(frame, f, imc, err)
     frame = scale_img(frame, imc)
-    # Blur should only be checked after cropping since it also depends on the resolution
-    check_blur(frame, imc)
 
-    # Testing: draws rectangle, landmarks and elipse around the head
+    # Blur should only be checked after cropping/scaling since it also depends on the resolution
+    check_blur(frame, imc, err)
+
+    # Testing: draws rectangle, landmarks and ellipse around the head
     if DRAW_MARKS:
         draw_marks(frame, f)
         draw_ellipses(frame, imc)
 
-    # print("--- %s seconds ---" % (time.time() - start_time))
+    # print("--- %s seconds ---" % (round(time.time() - start_time, 3)))
+
+    if err.has_errors():
+        raise err
+
     return frame
 
 

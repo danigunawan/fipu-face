@@ -12,7 +12,7 @@ def do_detect(stream_path):
         frame = detect(frame, imc=ImgX)
         cv2.imwrite('imgs/new/' + stream_path.replace('.jpg', '.jpg'), frame, [cv2.IMWRITE_JPEG_QUALITY, JPEG_QUALITY])
     except ImageException as e:
-        print(e.message)
+        print(e.get_error_codes())
 
 
 if __name__ == '__main__':

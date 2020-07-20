@@ -23,8 +23,8 @@ def detect_on_img(frame):
 
         return frame
     except ImageException as e:
-        print(e.message)
-        draw_predict_info(frame, e.message)
+        print(e.get_error_codes())
+        draw_predict_info(frame, e.errors)
         return frame
 
 
