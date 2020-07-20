@@ -43,7 +43,8 @@ Response returns two types of json objects:
 - When error occurs
 
 ```python
-{"message": "Error description here"}
+{"errors": [{'error_code': 'err1', 'message': 'Detail message error 1'},
+            {'error_code': 'err2', 'message': 'Detail message error 2'}]}
 ```
 
 - When image processing completed successfully
