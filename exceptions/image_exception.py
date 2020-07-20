@@ -14,9 +14,6 @@ class ImageException(Exception):
         rv['message'] = self.message
         return rv
 
-    def __call__(self, *args, **kwargs):
-        a = args[0]
-
 
 def raise_error(msg, tokens=None):
     if tokens:
