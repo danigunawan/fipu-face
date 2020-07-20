@@ -33,6 +33,3 @@ PICTURED_TO_CLOSE_EXCEPTION = "Slikano preblizu ili nije centrirano.\nProstor:\n
 TILTED_HEAD_EXCEPTION = "Glava je nakrivljena. Potrebno je gledati prema kameri"
 
 BLURRY_IMAGE_EXCEPTION = "Slika je mutna"
-
-BASE64_DECODING_EXCEPTION = "Invalid base64 encoded image"
-BYTES_DECODING_EXCEPTION = "Invalid image bytes"

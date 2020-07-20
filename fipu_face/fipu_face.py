@@ -212,19 +212,13 @@ def get_from_file(file, img_format=IMG_FORMAT_X, encoding=ENCODING_BASE64):
 def get_from_base64(uri, img_format=IMG_FORMAT_X, encoding=ENCODING_BASE64):
     # Just in case the uri contains base64 prefix, split and take the last part
     encoded_data = uri.split('base64,')[-1]
-    try:
-        img = cv2_read_img(base64.b64decode(encoded_data))
-        return __do_detect(img, img_format, encoding)
-    except:
-        raise_error(BASE64_DECODING_EXCEPTION)
+    img = cv2_read_img(base64.b64decode(encoded_data))
+    return __do_detect(img, img_format, encoding)
 
 
 # API method called when the file is uploaded as a field in bytes format
 def get_from_bytes(img_bytes, img_format=IMG_FORMAT_X, encoding=ENCODING_BASE64):
-    try:
-        return __do_detect(img_bytes, img_format, encoding)
-    except:
-        raise_error(BYTES_DECODING_EXCEPTION)
+    return __do_detect(cv2_read_img(img_bytes), img_format, encoding)
 
 
 """

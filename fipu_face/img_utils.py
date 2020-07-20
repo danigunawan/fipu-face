@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from exceptions.image_exception import ImageException
+from exceptions.image_exception import *
 import base64
 
 ENCODING_BASE64 = 'base64'
@@ -32,7 +32,12 @@ def calc_scale(frame):
 
 # Decodes the image from a bytes stream
 def cv2_read_img(stream):
-    return cv2.imdecode(np.frombuffer(stream, np.uint8), cv2.IMREAD_UNCHANGED)
+    try:
+        img = cv2.imdecode(np.frombuffer(stream, np.uint8), cv2.IMREAD_UNCHANGED)
+        if not img:
+            raise_error('Invalid image format/encoding')
+    except:
+        raise_error('Invalid image format/encoding')
 
 
 # Encodes the image in the given method: ENCODING_BASE64 or ENCODING_BYTES
