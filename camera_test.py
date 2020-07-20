@@ -1,6 +1,8 @@
 from fipu_face.fipu_face import *
 
 
+# Test the cropping in real time using the camera
+
 def draw_predict_info(frame, msg):
     info = {'Message': msg}
 
@@ -16,8 +18,6 @@ def draw_predict_info(frame, msg):
 
 
 def detect_on_img(frame):
-    # start_time = time.time()
-
     try:
         frame = detect(frame, imc=ImgX)
 
@@ -37,9 +37,6 @@ def detect_camera():
             break
 
         frame = detect_on_img(frame)
-        # faces = rf.detect_faces(frame, scale=calc_scale(frame))
-        # if len(faces)>0:
-        #     is_not_looking_straight(frame, faces[0])
         cv2.imshow('frame', frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break

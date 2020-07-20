@@ -5,6 +5,8 @@ import insightface
 
 
 def __load_model():
+    # No recognition model and no gender-age model
+    # Also using the smallest model to speed up the detection
     fa = insightface.app.FaceAnalysis(det_name='retinaface_mnet025_v2', rec_name=None, ga_name=None)
     fa.prepare(-1)
     return fa

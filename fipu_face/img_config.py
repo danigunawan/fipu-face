@@ -11,9 +11,7 @@
 # sirina glave: 17.5-25
 # visina glave: 31.5-36 (beba(<11 god): 22.5-36)
 
-from fipu_face.facial_landmarks.emotion import *
-
-IMG_DPI = 300
+# from fipu_face.facial_landmarks.emotion import *
 
 IMG_FORMAT_X = 'x'
 IMG_FORMAT_30x35_11Plus = '30x35_11Plus'
@@ -22,14 +20,19 @@ IMG_FORMAT_35x45_11Plus = '35x45_11Plus'
 IMG_FORMAT_35x45_11 = '35x45_11'
 
 
+# Image config class that describes the cropping properties of the image
 class ImgConfig:
-    def __init__(self, width, height, hw_range, hh_range, emotions=tuple([EMOTION_NEUTRAL]), glasses=False):
+    dpi = 300
+    # Blur should be adjusted for each size, this is only for ImgX
+    blur_threshold = 150
+
+    def __init__(self, width, height, hw_range, hh_range):  # , emotions=tuple([EMOTION_NEUTRAL]), glasses=False):
         self.w = width
         self.h = height
         self.hw_range = hw_range
         self.hh_range = hh_range
-        self.allowed_emotions = emotions
-        self.glasses = glasses
+        # self.allowed_emotions = emotions
+        # self.glasses = glasses
 
 
 Img30x35_11Plus = ImgConfig(width=30,
@@ -55,9 +58,9 @@ Img35x45_11 = ImgConfig(width=35,
 ImgX = ImgConfig(width=25,
                  height=30,
                  hw_range=(12.5, 13.5),
-                 hh_range=(15.5, 16.5),
-                 emotions=(EMOTION_NEUTRAL, EMOTION_HAPPY),
-                 glasses=False)
+                 hh_range=(15.5, 16.5))  # ,
+                # emotions=(EMOTION_NEUTRAL, EMOTION_HAPPY),
+                # glasses=False)
 
 __all_formats = {
     IMG_FORMAT_X: ImgX,
@@ -68,5 +71,6 @@ __all_formats = {
 }
 
 
+# Get format by name
 def get_format(format_name):
     return __all_formats.get(format_name, ImgX)

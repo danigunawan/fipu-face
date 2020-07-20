@@ -72,7 +72,7 @@ def draw_predict(frame, conf, left, top, right, bottom, blur=False, name=''):
         blur_face(frame, left, top, right, bottom)
 
 
-def draw_marks(frame, f, blur_faces):
+def draw_marks(frame, f, blur_faces=False):
     b = f.bbox
     draw_predict(frame, f.det_score, b[0], b[1], b[2], b[3], blur_faces)
     if f.landmark is not None:

@@ -7,7 +7,19 @@ ENCODING_BASE64 = 'base64'
 ENCODING_BYTES = 'bytes'
 JPEG_QUALITY = 80
 
+INCH = 25.4
 
+
+# Resize's the image to the image configuration resolution at given dip
+def scale_img(frame, imc):
+    img_res = (round(imc.w / INCH * imc.dpi), round(imc.h / INCH * imc.dpi))
+    # print(img_res)
+    frame = cv2.resize(frame, img_res)
+    return frame
+
+
+# Calculating scale for RetinaFace
+# The train images were at 640x640 so the scale is calculated based on that assumption
 def calc_scale(frame):
     w = frame.shape[1]
     h = frame.shape[0]
@@ -18,10 +30,12 @@ def calc_scale(frame):
     # return min(scale_w, scale_h, 1) * 0.5  # Scale lowered by a factor to speed up the detection
 
 
+# Decodes the image from a bytes stream
 def cv2_read_img(stream):
     return cv2.imdecode(np.frombuffer(stream, np.uint8), cv2.IMREAD_UNCHANGED)
 
 
+# Encodes the image in the given method: ENCODING_BASE64 or ENCODING_BYTES
 def convert_img(img, method):
     if img is None:
         return None

@@ -1,3 +1,6 @@
+"""
+Not really working stable, takes 0.2 seconds
+
 from fer import FER
 
 __detector = FER(mtcnn=True)
@@ -25,3 +28,4 @@ def detect_emotion(frame, f):
     if len(__detector.detect_emotions(frame)) > 0:
         return __detector.top_emotion(frame)[0]
     return EMOTION_NONE
+"""

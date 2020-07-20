@@ -11,6 +11,9 @@ FIPU face detects possible errors in the image:
 - not looking towards the camera
 - covered eyes, nose or mouth
 - multiple or no faces in the image
+- image is too blurry
+
+All errors (and appropriate messages) are stored in [ImageException.py](exceptions/ImageException.py)
 
 
 
@@ -95,22 +98,20 @@ if __name__ == '__main__':
 ```
 
 
+You can also check how your face is cropped in real time by running `camera_test.py`
+
+
 ## Future features
 
-- [ ] - Image cropping for [official documents](https://mup.gov.hr/UserDocsImages/BannerZona/Upute%20za%20fotografije%202013%20(2).pdf) (in Croatia)
-
+- [x] Image cropping for [official documents](https://mup.gov.hr/UserDocsImages/BannerZona/Upute%20za%20fotografije%202013%20(2).pdf) (in Croatia)
+- [ ] Emotion detection - government document should have neutral emotion
+- [ ] Check for face obstacles (eg. glasses, mask, hand in front of face) 
 
 
 ## References
 
 - [RetinaFace](https://github.com/deepinsight/insightface/tree/master/RetinaFace) - Face detection
-- [FER](https://pypi.org/project/fer/) - Facial expression recognition
+- [FER](https://pypi.org/project/fer/) - Facial expression recognition (in progress)
 - [Real-time Glasses Detection](https://github.com/TianxingWu/realtime-glasses-detection) - Glasses detection (in progress)
 - [Flask](https://flask.palletsprojects.com/en/1.1.x/) - API
-
-
-
-
-
-
 
