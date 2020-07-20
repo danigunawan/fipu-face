@@ -183,7 +183,7 @@ def detect(frame, imc=ImgX):
 
     f = faces[0]
     # print(f.det_score)
-    draw_marks(frame, f, False)
+    # draw_marks(frame, f, False)
     check_face_alignment(frame, f)
     # check_face_emotion(frame, f, imc)
     # check_face_obstacles(frame, f, imc)
@@ -191,7 +191,7 @@ def detect(frame, imc=ImgX):
     # frame = crop_img(frame, f)
     frame = crop_img(frame, f, imc)
     frame = scale_img(frame, imc)
-    draw_ellipses(frame, imc)
+    # draw_ellipses(frame, imc)
     # print("--- %s seconds ---" % (time.time() - start_time))
 
     return frame
