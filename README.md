@@ -13,7 +13,7 @@ FIPU face detects possible errors in the image:
 - multiple or no faces in the image
 - image is too blurry
 
-All errors (and appropriate messages) are stored in [ImageException.py](exceptions/ImageException.py)
+All errors (and appropriate messages) are stored in [ImageException.py](exceptions/image_exception.py)
 
 
 
