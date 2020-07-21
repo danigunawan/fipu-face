@@ -24,7 +24,7 @@ IMG_FORMAT_35x45_11 = '35x45_11'
 class ImgConfig:
     dpi = 300
     # Blur should be adjusted for each size, this is only for ImgX
-    blur_threshold = 100
+    blur_threshold = 80
 
     def __init__(self, width, height, hw_range, hh_range):  # , emotions=tuple([EMOTION_NEUTRAL]), glasses=False):
         self.w = width

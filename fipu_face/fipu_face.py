@@ -18,6 +18,10 @@ MAX_EYES_Y_DIFF_PCT = 5
 # This helps to detect if the person is looking to the side
 MAX_NOSE_EYES_DIST_DIFF_PCT = 10
 
+# Maximum percentage of non white background
+MAX_NON_WHITE_BG_PCT = 3
+
+
 # When testing, when true draw bounding box and landmarks
 DRAW_MARKS = False
 
@@ -95,11 +99,11 @@ def __do_crop(frame, x_start, x_end, y_start, y_end, err):
 
     # Before cropping check if the copping points are not outside the frame
     if min(y_start, x_start) < 0 or x_end > w or y_end > h:
-        msg_fmt = lambda num: 'OK' if num >= 0 else 'NOT OK'
         # print(y_start, x_start, x_end, y_end, frame.shape[:2])
-        err(PICTURED_TO_CLOSE_EXCEPTION, [msg_fmt(x_start), msg_fmt(w - x_end), msg_fmt(y_start), msg_fmt(h - y_end)])
+        sides = [SIDES_STR[i] for i, a in enumerate([x_start, w - x_end, y_start, h - y_end]) if a < 0]
+        print(sides, [x_start, w - x_end, y_start, h - y_end])
+        err(PICTURED_TO_CLOSE_EXCEPTION, [', '.join(sides)])
         return frame
-        # raise_error(PICTURED_TO_CLOSE_EXCEPTION, [msg_fmt(x_start), msg_fmt(w - x_end), msg_fmt(y_start), msg_fmt(h - y_end)])
 
     # Crop the image
     frame = frame[int(y_start):int(y_end), int(x_start):int(x_end)]
@@ -175,12 +179,13 @@ def check_num_faces(faces):
 def check_white_bg(frame, err):
     non_white_pct = get_non_white_bg_pct(frame)
     print('White pct: {}'.format(round(non_white_pct, 3)))
-    if non_white_pct > 3:
+    if non_white_pct > MAX_NON_WHITE_BG_PCT:
         err(NON_WHITE_BG)
 
 
 # Detects and crop's the image if all checks are successful
 def detect(frame, imc=ImgX):
+    frame = frame[:, :, :3]
     # start_time = time.time()
     # Detect the faces... images are scaled to the training resolution to speed up the detection
     faces = rf.detect_faces(frame, scale=calc_scale(frame))

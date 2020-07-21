@@ -20,7 +20,8 @@ DETAIL_MESSAGES = {
     TOO_MANY_FACES_EXCEPTION: "Detektirana je previše lica ({} lica)",
 
     NO_LANDMARKS_EXCEPTION: "Nisu očitana sva obilježja lica (oči, nos, usta)",
-    PICTURED_TO_CLOSE_EXCEPTION: "Slikano preblizu ili nije centrirano.\nProstor:\n- Lijevo: {}\n- Desno: {}\n- Gore: {}\n- Dolje: {}",
+    # PICTURED_TO_CLOSE_EXCEPTION: "Slikano preblizu ili nije centrirano.\nProstor:\n- Lijevo: {}\n- Desno: {}\n- Gore: {}\n- Dolje: {}",
+    PICTURED_TO_CLOSE_EXCEPTION: "Slikano preblizu. Nedostaje mjesta - {}",
     TILTED_HEAD_EXCEPTION: "Glava je nakrivljena. Potrebno je gledati prema kameri",
 
     BLURRY_IMAGE_EXCEPTION: "Slika je mutna",
@@ -31,6 +32,8 @@ DETAIL_MESSAGES = {
     INVALID_ENCODING_METHOD: "Encoding method {} not implemented. Use {}"
 
 }
+
+SIDES_STR = ['Lijevo', 'Desno', 'Gore', 'Dolje']
 
 
 def raise_error(msg, tokens=None):
