@@ -4,7 +4,7 @@ from fipu_face.fipu_face import *
 # Test the cropping in real time using the camera
 
 def draw_predict_info(frame, msg):
-    info = {'Message': msg}
+    info = {'Message': str(msg)}
 
     # text_list = [k + ':  '+ v for k,v in zip(info.keys(), info.values())]
     text_list = [v for k, v in zip(info.keys(), info.values())]
@@ -23,8 +23,8 @@ def detect_on_img(frame):
 
         return frame
     except ImageException as e:
-        print(e.get_error_codes())
-        draw_predict_info(frame, e.errors)
+        # print(e.get_error_codes())
+        draw_predict_info(frame, e.get_error_codes())
         return frame
 
 

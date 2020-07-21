@@ -8,6 +8,8 @@ TILTED_HEAD_EXCEPTION = "head_tilted"
 
 BLURRY_IMAGE_EXCEPTION = "image_blurry"
 
+NON_WHITE_BG = "non_white_bg"
+
 INVALID_IMAGE_FORMAT = "invalid_image_format"
 
 INVALID_ENCODING_METHOD = "invalid_encoding_method"
@@ -22,6 +24,8 @@ DETAIL_MESSAGES = {
     TILTED_HEAD_EXCEPTION: "Glava je nakrivljena. Potrebno je gledati prema kameri",
 
     BLURRY_IMAGE_EXCEPTION: "Slika je mutna",
+
+    NON_WHITE_BG: "Pozadina mora biti svijetle bijele boje. Stanite ispred zida i upalite svjetlo",
 
     INVALID_IMAGE_FORMAT: "Invalid image format/encoding",
     INVALID_ENCODING_METHOD: "Encoding method {} not implemented. Use {}"
