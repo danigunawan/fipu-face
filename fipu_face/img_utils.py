@@ -33,7 +33,7 @@ def calc_scale(frame):
 # Decodes the image from a bytes stream
 def cv2_read_img(stream):
     try:
-        img = cv2.imdecode(np.frombuffer(stream, np.uint8), cv2.IMREAD_UNCHANGED)
+        img = cv2.imdecode(np.frombuffer(stream, np.uint8), cv2.IMREAD_COLOR)
         if img is None:
             raise_error(INVALID_IMAGE_FORMAT)
         return img

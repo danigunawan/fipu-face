@@ -101,7 +101,6 @@ def __do_crop(frame, x_start, x_end, y_start, y_end, err):
     if min(y_start, x_start) < 0 or x_end > w or y_end > h:
         # print(y_start, x_start, x_end, y_end, frame.shape[:2])
         sides = [SIDES_STR[i] for i, a in enumerate([x_start, w - x_end, y_start, h - y_end]) if a < 0]
-        print(sides, [x_start, w - x_end, y_start, h - y_end])
         err(PICTURED_TO_CLOSE_EXCEPTION, [', '.join(sides)])
         return frame
 
@@ -141,8 +140,10 @@ def check_face_alignment(frame, f, err):
 
     # If the nose x position is smaller than the left eye x position or greater than the right eye y position
     # then the person is looking to the side, otherwise it still may be a slight head tilt to either side
-    if eyes_tilt > MAX_EYES_Y_DIFF_PCT or nose[0] < left_eye[0] or nose[0] > right_eye[
-        0] or nose_tilt > MAX_NOSE_EYES_DIST_DIFF_PCT:
+    if eyes_tilt > MAX_EYES_Y_DIFF_PCT or \
+            nose[0] < left_eye[0] or \
+            nose[0] > right_eye[0] or \
+            nose_tilt > MAX_NOSE_EYES_DIST_DIFF_PCT:
         err(TILTED_HEAD_EXCEPTION)
         # raise_error(TILTED_HEAD_EXCEPTION)
 
@@ -183,12 +184,11 @@ def check_white_bg(frame, err):
         if non_white_pct > MAX_NON_WHITE_BG_PCT:
             err(NON_WHITE_BG)
     except Exception as e:
-        print(e)
+        print("Error while trying to detect background: ", e)
 
 
 # Detects and crop's the image if all checks are successful
 def detect(frame, imc=ImgX):
-    frame = frame[:, :, :3]
     # start_time = time.time()
     # Detect the faces... images are scaled to the training resolution to speed up the detection
     faces = rf.detect_faces(frame, scale=calc_scale(frame))
