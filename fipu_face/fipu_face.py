@@ -177,10 +177,13 @@ def check_num_faces(faces):
 
 # Ensures that the background is white
 def check_white_bg(frame, err):
-    non_white_pct = get_non_white_bg_pct(frame)
-    print('White pct: {}'.format(round(non_white_pct, 3)))
-    if non_white_pct > MAX_NON_WHITE_BG_PCT:
-        err(NON_WHITE_BG)
+    try:
+        non_white_pct = get_non_white_bg_pct(frame)
+        print('White pct: {}'.format(round(non_white_pct, 3)))
+        if non_white_pct > MAX_NON_WHITE_BG_PCT:
+            err(NON_WHITE_BG)
+    except Exception as e:
+        print(e)
 
 
 # Detects and crop's the image if all checks are successful
