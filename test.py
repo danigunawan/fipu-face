@@ -1,5 +1,5 @@
 from fipu_face.fipu_face import *
-
+import os
 
 ###############
 #   TESTING   #
@@ -17,8 +17,7 @@ def do_detect(stream_path):
 
 if __name__ == '__main__':
     # """
-    for i in ['1.jpg', 'a.jpg', 'j.jpg', 'm.jpg', 'w.jpg', 's1.jpg', 's2.jpg', 'l1.jpg', 'l2.jpg', 'l3.jpg', 'd.jpg', 'msk.jpg', 'e.jpg', 'e1.jpg',
-              'g1.jpg', 'g2.jpg', 'g3.jpg', 'g4.jpg', 'g5.jpg', 'g6.jpg', 'b1.jpg', 'b2.jpg', 'b3.jpg', 'b4.jpg', 'b5.jpg', 'b6.jpg']:
+    for i in sorted([f for f in os.listdir('imgs/') if f.split('.')[-1] in ['jpg', 'jpeg', 'png'] ]):
         do_detect(i)
     # """
     # do_detect('a.jpg')

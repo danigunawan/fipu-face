@@ -19,7 +19,7 @@ MAX_EYES_Y_DIFF_PCT = 5
 MAX_NOSE_EYES_DIST_DIFF_PCT = 10
 
 # Maximum percentage of non white background
-MAX_NON_WHITE_BG_PCT = 3
+MAX_NON_WHITE_BG_PCT = 1.5
 
 
 # When testing, when true draw bounding box and landmarks
