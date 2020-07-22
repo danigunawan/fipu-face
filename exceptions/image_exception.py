@@ -21,7 +21,7 @@ DETAIL_MESSAGES = {
 
     NO_LANDMARKS_EXCEPTION: "Nisu očitana sva obilježja lica (oči, nos, usta)",
     # PICTURED_TO_CLOSE_EXCEPTION: "Slikano preblizu ili nije centrirano.\nProstor:\n- Lijevo: {}\n- Desno: {}\n- Gore: {}\n- Dolje: {}",
-    PICTURED_TO_CLOSE_EXCEPTION: "Slikano preblizu. Nedostaje mjesta - {}",
+    PICTURED_TO_CLOSE_EXCEPTION: "Slikano preblizu, malo se udaljite od kamere. Nedostaje mjesta - {}",
     TILTED_HEAD_EXCEPTION: "Glava je nakrivljena. Potrebno je gledati prema kameri",
 
     BLURRY_IMAGE_EXCEPTION: "Slika je mutna",
