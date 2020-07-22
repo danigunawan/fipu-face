@@ -10,6 +10,21 @@ JPEG_QUALITY = 80
 INCH = 25.4
 
 
+def alpha_to_white(image):
+    # If has an alpha channel
+    if image.shape[2] == 4:
+        # Make mask of where the transparent bits are
+        trans_mask = image[:, :, 3] == 0
+
+        # Replace areas of transparency with white and not transparent
+        image[trans_mask] = [255, 255, 255, 255]
+
+        # New image without alpha channel...
+        return cv2.cvtColor(image, cv2.COLOR_BGRA2BGR)
+
+    return image
+
+
 # Resize's the image to the image configuration resolution at given dip
 def scale_img(frame, imc):
     img_res = (round(imc.w / INCH * imc.dpi), round(imc.h / INCH * imc.dpi))
@@ -33,7 +48,7 @@ def calc_scale(frame):
 # Decodes the image from a bytes stream
 def cv2_read_img(stream):
     try:
-        img = cv2.imdecode(np.frombuffer(stream, np.uint8), cv2.IMREAD_COLOR)
+        img = cv2.imdecode(np.frombuffer(stream, np.uint8), cv2.IMREAD_UNCHANGED)
         if img is None:
             raise_error(INVALID_IMAGE_FORMAT)
         return img

@@ -185,6 +185,9 @@ def check_white_bg(frame, imc, err):
 
 # Detects and crop's the image if all checks are successful
 def detect(frame, imc=ImgX):
+
+    frame = alpha_to_white(frame)
+
     # start_time = time.time()
     # Detect the faces... images are scaled to the training resolution to speed up the detection
     faces = rf.detect_faces(frame, scale=calc_scale(frame))
@@ -208,7 +211,7 @@ def detect(frame, imc=ImgX):
     frame = scale_img(frame, imc)
 
     # Blur should only be checked after cropping/scaling since it also depends on the resolution
-    # check_blur(frame, imc, err)
+    check_blur(frame, imc, err)
 
     check_white_bg(frame, imc, err)
 

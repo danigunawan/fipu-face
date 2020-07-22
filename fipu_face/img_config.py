@@ -24,7 +24,7 @@ IMG_FORMAT_35x45_11 = '35x45_11'
 class ImgConfig:
     dpi = 300
     # Blur should be adjusted for each size, this is only for ImgX
-    blur_threshold = 50
+    blur_threshold = 30
 
     # Maximum percentage of non white background. Should be adjusted for each size, this is only for ImgX
     max_non_white_bg_pct = 1.5
