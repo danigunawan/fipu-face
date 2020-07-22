@@ -11,7 +11,9 @@ FIPU face detects possible errors in the image:
 - no faces in the image (`no_face`)
 - multiple faces in the image (`too_many_faces`)
 - image is too blurry (`image_blurry`)
+- image background is not white (`non_white_bg`)
 - eyes, nose or mouth not detected (`no_landmarks`)
+
 
 All errors (and appropriate messages) are stored in [ImageException.py](exceptions/image_exception.py)
 
@@ -66,11 +68,11 @@ Response returns two types of json objects:
 
 
 
-##### Croped and resized image
+##### Cropped and resize'd image
 
 |           25x30@300dpi            | 30x35@300dpi                           | 35x45@300dpi                           |
 | :-------------------------------: | -------------------------------------- | -------------------------------------- |
-| ![Croped image](imgs/crop/l2.jpg) | ![Croped image](imgs/crop/l230x35.jpg) | ![Croped image](imgs/crop/l235x45.jpg) |
+| ![Cropped image](imgs/crop/l2.jpg) | ![Cropped image](imgs/crop/l230x35.jpg) | ![Cropped image](imgs/crop/l235x45.jpg) |
 
 
 
