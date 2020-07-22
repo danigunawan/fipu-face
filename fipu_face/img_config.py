@@ -55,12 +55,21 @@ Img35x45_11 = ImgConfig(width=35,
                         hw_range=(17.5, 25),
                         hh_range=(22.5, 36))
 
+
+ImgX = ImgConfig(width=25,
+                 height=30,
+                 hw_range=(16, 17),
+                 hh_range=(18, 20))
+
+"""
+# The initial version of dimensions for x-ica
 ImgX = ImgConfig(width=25,
                  height=30,
                  hw_range=(12.5, 13.5),
                  hh_range=(15.5, 16.5))  # ,
                 # emotions=(EMOTION_NEUTRAL, EMOTION_HAPPY),
                 # glasses=False)
+"""
 
 __all_formats = {
     IMG_FORMAT_X: ImgX,
