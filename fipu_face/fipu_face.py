@@ -18,10 +18,6 @@ MAX_EYES_Y_DIFF_PCT = 5
 # This helps to detect if the person is looking to the side
 MAX_NOSE_EYES_DIST_DIFF_PCT = 10
 
-# Maximum percentage of non white background
-MAX_NON_WHITE_BG_PCT = 1.5
-
-
 # When testing, when true draw bounding box and landmarks
 DRAW_MARKS = False
 
@@ -177,11 +173,11 @@ def check_num_faces(faces):
 
 
 # Ensures that the background is white
-def check_white_bg(frame, err):
+def check_white_bg(frame, imc, err):
     try:
         non_white_pct = get_non_white_bg_pct(frame)
-        print('White pct: {}'.format(round(non_white_pct, 3)))
-        if non_white_pct > MAX_NON_WHITE_BG_PCT:
+        print('Non-white pct: {}'.format(round(non_white_pct, 3)))
+        if non_white_pct > imc.max_non_white_bg_pct:
             err(NON_WHITE_BG)
     except Exception as e:
         print("Error while trying to detect background: ", e)
@@ -195,6 +191,12 @@ def detect(frame, imc=ImgX):
 
     check_num_faces(faces)
     f = faces[0]
+
+    # Testing: face box and landmark drawing
+    # Need to draw before cropping because the landmarks have the position on the initial frame
+    if DRAW_MARKS:
+        draw_marks(frame, f)
+
     # print(f.det_score)
     err = ImageException()
 
@@ -206,13 +208,12 @@ def detect(frame, imc=ImgX):
     frame = scale_img(frame, imc)
 
     # Blur should only be checked after cropping/scaling since it also depends on the resolution
-    check_blur(frame, imc, err)
+    # check_blur(frame, imc, err)
 
-    check_white_bg(frame, err)
+    check_white_bg(frame, imc, err)
 
-    # Testing: draws rectangle, landmarks and ellipse around the head
+    # Testing: ellipse around the head
     if DRAW_MARKS:
-        draw_marks(frame, f)
         draw_ellipses(frame, imc)
 
     # print("--- %s seconds ---" % (round(time.time() - start_time, 3)))
