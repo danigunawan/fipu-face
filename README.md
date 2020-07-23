@@ -8,6 +8,7 @@ FIPU face detects possible errors in the image:
 
 - picture taken to close to the camera (`too_close`)
 - head tilted to the side (`head_tilted`)
+- head turned to the side (`head_turned`)
 - no faces in the image (`no_face`)
 - multiple faces in the image (`too_many_faces`)
 - image is too blurry (`image_blurry`)
@@ -45,7 +46,8 @@ Response returns two types of json objects:
 - When error occurs
 
 ```python
-{"errors": [{'error_code': 'err1', 'message': 'Detail message error 1'},
+{"img": "/9/dsjdias...." # Image with errors displayed in it
+ "errors": [{'error_code': 'err1', 'message': 'Detail message error 1'},
             {'error_code': 'err2', 'message': 'Detail message error 2'}]}
 ```
 
