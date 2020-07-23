@@ -7,9 +7,6 @@ import tensorflow as tf
 import cv2
 import numpy as np
 
-# No eager execution in tensorflow 2.2.0
-# tf.enable_eager_execution()
-
 
 def bilinear_resize(x, rsize):
     return tf.image.resize(x, [rsize, rsize])

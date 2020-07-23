@@ -12,14 +12,14 @@ from fipu_face.segregation.segregation import get_non_white_bg_pct
 
 # Maximum difference in percentage in elevation between both eyes (y axis)
 # Sometimes the detections are not as accurate so that should be taken into consideration
-MAX_EYES_Y_DIFF_PCT = 5
+MAX_EYES_Y_DIFF_PCT = 3
 
 # Maximum percentage difference between left eye-nose : right eye-nose
 # This helps to detect if the person is looking to the side
-MAX_NOSE_EYES_DIST_DIFF_PCT = 10
+MAX_NOSE_EYES_DIST_DIFF_PCT = 8
 
 # When testing, when true draw bounding box and landmarks
-DRAW_MARKS = False
+DRAW_MARKS = True
 
 
 # Crops the face based on the image configuration
@@ -155,6 +155,8 @@ def check_face_alignment(frame, f, err):
     # print(np.mean(left_lip, right_lip))
 
     # print("Diff: ", nose[1] - eyes,  mouth - nose[1])
+    # print("Eyes: ", eyes_tilt)
+    # print("Nose: ", nose_tilt)
 
 
 # Checks whether the image is blurry
@@ -165,7 +167,7 @@ def check_blur(frame, imc, err):
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     # Calculate the blur
     blur = cv2.Laplacian(gray, cv2.CV_64F).var()
-    print('Blur: {}'.format(round(blur, 3)))
+    # print('Blur: {}'.format(round(blur, 3)))
     if blur < imc.blur_threshold:
         err(BLURRY_IMAGE_EXCEPTION)
         # raise_error(BLURRY_IMAGE_EXCEPTION)
@@ -184,7 +186,7 @@ def check_white_bg(frame, imc, err):
     import traceback
     try:
         non_white_pct = get_non_white_bg_pct(frame)
-        print('Non-white pct: {}'.format(round(non_white_pct, 3)))
+        # print('Non-white pct: {}'.format(round(non_white_pct, 3)))
         if non_white_pct > imc.max_non_white_bg_pct:
             err(NON_WHITE_BG)
     except Exception as e:
