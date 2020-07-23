@@ -171,14 +171,15 @@ def draw_non_white_bg(img, f, color, thickness):
     bottom = f.bbox[3] * 1.1
 
     space = bottom / n_stripes
+    l_r_pad = int(w * 0.05)
     for i in range(n_stripes + 1):
         y = int(space * i)
         if y < top:
-            cv2.line(img, (0, y), (int(w), y), color, thickness)
+            cv2.line(img, (l_r_pad, y), (int(w - l_r_pad), y), color, thickness)
         else:
             diff = i * (right - left) * 0.02
-            cv2.line(img, (0, y), (int(left - diff), y), color, thickness)
-            cv2.line(img, (int(right + diff), y), (int(w), y), color, thickness)
+            cv2.line(img, (l_r_pad, y), (int(left - diff), y), color, thickness)
+            cv2.line(img, (int(right + diff), y), (int(w - l_r_pad), y), color, thickness)
 
 
 def calc_thickness_scale(img):

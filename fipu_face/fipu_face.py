@@ -277,7 +277,7 @@ def draw_errors(frame, f, err):
         draw_head_tilt(frame, f, not err.get_payload(TILTED_HEAD_EXCEPTION), COLOR_RED, thickness)
 
     if err.has_error(NON_WHITE_BG):
-        draw_non_white_bg(frame, f, COLOR_WHITE, thickness)
+        draw_non_white_bg(frame, f, COLOR_WHITE, thickness * 2)
 
 """
 def check_face_emotion(frame, f, imc):
