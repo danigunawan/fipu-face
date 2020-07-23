@@ -181,12 +181,14 @@ def check_num_faces(faces):
 
 # Ensures that the background is white
 def check_white_bg(frame, imc, err):
+    import traceback
     try:
         non_white_pct = get_non_white_bg_pct(frame)
         print('Non-white pct: {}'.format(round(non_white_pct, 3)))
         if non_white_pct > imc.max_non_white_bg_pct:
             err(NON_WHITE_BG)
     except Exception as e:
+        traceback.print_exc()
         print("Error while trying to detect background: ", e)
 
 
