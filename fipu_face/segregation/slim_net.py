@@ -135,7 +135,7 @@ def slim_net():
     model = Model(inputs=input, outputs=cout2)
     model.compile(optimizer='adam',
                   loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
-                  metrics=['accuracy'])  # Ensure you have sparse labels
+                  metrics=['accuracy'], run_eagerly=True)  # Ensure you have sparse labels
 
     return model
 
