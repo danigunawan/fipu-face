@@ -7,6 +7,8 @@ import tensorflow as tf
 import cv2
 import numpy as np
 
+tf.enable_eager_execution()
+
 
 def bilinear_resize(x, rsize):
     return tf.image.resize(x, [rsize, rsize])
