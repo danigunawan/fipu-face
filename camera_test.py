@@ -24,6 +24,8 @@ def detect_on_img(frame):
         return frame
     except ImageException as e:
         # print(e.get_error_codes())
+        if e.image is not None:
+            frame = e.image
         draw_predict_info(frame, e.get_error_codes())
         return frame
 

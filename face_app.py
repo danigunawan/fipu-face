@@ -94,7 +94,10 @@ def upload_file():
 @app.errorhandler(ImageException)
 def handle_image_exception(error):
     # Response returns a list of errors
-    response = jsonify(error.to_dict())
+    errors = error.to_dict()
+    errors['img'] = fipu_face.convert_img(errors['img'], get_response_encoding())
+    response = jsonify(errors)
+
     response.status_code = error.status_code
     return response
 

@@ -96,8 +96,9 @@ def __do_crop(frame, x_start, x_end, y_start, y_end, err):
     # Before cropping check if the copping points are not outside the frame
     if min(y_start, x_start) < 0 or x_end > w or y_end > h:
         # print(y_start, x_start, x_end, y_end, frame.shape[:2])
-        sides = [SIDES_STR[i] for i, a in enumerate([x_start, w - x_end, y_start, h - y_end]) if a < 0]
-        err(PICTURED_TO_CLOSE_EXCEPTION, [', '.join(sides)])
+        s_i = [a < 0 for a in [x_start, y_start, w - x_end, h - y_end]]
+        sides = [SIDES_STR[i] for i, a in enumerate(s_i) if a]
+        err(PICTURED_TO_CLOSE_EXCEPTION, [', '.join(sides)], s_i)
         return frame
 
     # Crop the image
@@ -127,21 +128,27 @@ def check_face_alignment(frame, f, err):
     # Eyes should be leveled - at least within the MAX_EYES_Y_DIFF_PCT percentage
     eyes_tilt = abs(left_eye[1] - right_eye[1]) / f_h * 100
 
-    # print("Eyes: ", eyes_tilt, "Nose-Eyes: ", nose_tilt)
+    if eyes_tilt > MAX_EYES_Y_DIFF_PCT:
+        err(TILTED_HEAD_EXCEPTION, payload=left_eye[1] < right_eye[1])
 
     # Is the nose looking left or right?
     # Calculate the difference between the (left_eye-nose) and (right_eye-nose)
+    l_n_e = abs(nose[0] - left_eye[0])
+    r_n_e = abs(nose[0] - right_eye[0])
     # The percentage in differences between eyes and the nose should be less than MAX_NOSE_EYES_DIST_DIFF_PCT
-    nose_tilt = abs(abs(nose[0] - left_eye[0]) - abs(nose[0] - right_eye[0])) / f_w * 100
+    nose_tilt = abs(l_n_e - r_n_e) / f_w * 100
 
     # If the nose x position is smaller than the left eye x position or greater than the right eye y position
     # then the person is looking to the side, otherwise it still may be a slight head tilt to either side
-    if eyes_tilt > MAX_EYES_Y_DIFF_PCT or \
-            nose[0] < left_eye[0] or \
-            nose[0] > right_eye[0] or \
-            nose_tilt > MAX_NOSE_EYES_DIST_DIFF_PCT:
-        err(TILTED_HEAD_EXCEPTION)
-        # raise_error(TILTED_HEAD_EXCEPTION)
+    turns = [nose[0] < left_eye[0], nose[0] > right_eye[0], nose_tilt > MAX_NOSE_EYES_DIST_DIFF_PCT]
+    if any(turns):
+        is_left = turns[0]
+        # If last error then make a guess about the turn
+        # This is purely for error display purposes
+        if not any(turns[:2]) and turns[2]:
+            is_left = l_n_e < r_n_e
+
+        err(TURNED_HEAD_EXCEPTION, payload=is_left)
 
     # mouth = (left_lip[1] + right_lip[1]) / 2
     # eyes = (left_eye[1] + right_eye[1]) / 2
@@ -201,7 +208,7 @@ def detect(frame, imc=ImgX):
         draw_marks(frame, f)
 
     # print(f.det_score)
-    err = ImageException()
+    err = ImageException(frame)
 
     check_face_alignment(frame, f, err)
     # check_face_emotion(frame, f, imc)
@@ -222,6 +229,7 @@ def detect(frame, imc=ImgX):
     # print("--- %s seconds ---" % (round(time.time() - start_time, 3)))
 
     if err.has_errors():
+        draw_errors(err.image, f, err)
         raise err
 
     return frame
@@ -250,6 +258,24 @@ def get_from_base64(uri, img_format=IMG_FORMAT_X, encoding=ENCODING_BASE64):
 def get_from_bytes(img_bytes, img_format=IMG_FORMAT_X, encoding=ENCODING_BASE64):
     return __do_detect(cv2_read_img(img_bytes), img_format, encoding)
 
+
+def draw_errors(frame, f, err):
+
+    thickness = 2 * calc_thickness_scale(frame)
+
+    if err.has_error(PICTURED_TO_CLOSE_EXCEPTION):
+        draw_no_space(frame, f, err.get_payload(PICTURED_TO_CLOSE_EXCEPTION), COLOR_RED, thickness)
+
+    if err.has_error(TURNED_HEAD_EXCEPTION):
+        # Draw arrow to opposite direction to where the person face is rotated
+        draw_head_turn(frame, f, not err.get_payload(TURNED_HEAD_EXCEPTION), COLOR_RED, thickness)
+
+    if err.has_error(TILTED_HEAD_EXCEPTION):
+        # Draw arrow to opposite direction to where the person is looking
+        draw_head_tilt(frame, f, not err.get_payload(TILTED_HEAD_EXCEPTION), COLOR_RED, thickness)
+
+    if err.has_error(NON_WHITE_BG):
+        draw_non_white_bg(frame, f, COLOR_WHITE, thickness)
 
 """
 def check_face_emotion(frame, f, imc):

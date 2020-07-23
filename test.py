@@ -5,6 +5,7 @@ import os
 #   TESTING   #
 ###############
 
+
 def do_detect(stream_path):
     print(stream_path)
     frame = cv2.imread('imgs/' + stream_path)
@@ -12,6 +13,7 @@ def do_detect(stream_path):
         frame = detect(frame, imc=ImgX)
         cv2.imwrite('imgs/new/' + stream_path.replace('.jpg', '.jpg'), frame, [cv2.IMWRITE_JPEG_QUALITY, JPEG_QUALITY])
     except ImageException as e:
+        cv2.imwrite('imgs/draw/' + stream_path, frame, [cv2.IMWRITE_JPEG_QUALITY, JPEG_QUALITY])
         print(e.get_error_codes())
 
 
