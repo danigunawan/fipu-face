@@ -83,7 +83,7 @@ class ImageException(Exception):
         rv = dict()
         rv['errors'] = self.errors.copy()
         for er in rv['errors']:
-            er.pop('payload')
+            er.pop('payload', None)
         rv['img'] = self.image
         return rv
 
