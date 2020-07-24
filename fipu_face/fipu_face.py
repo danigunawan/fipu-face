@@ -19,7 +19,7 @@ MAX_EYES_Y_DIFF_PCT = 3
 MAX_NOSE_EYES_DIST_DIFF_PCT = 8
 
 # When testing, when true draw bounding box and landmarks
-DRAW_MARKS = True
+DRAW_MARKS = False
 
 
 # Crops the face based on the image configuration

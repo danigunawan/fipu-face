@@ -23,17 +23,21 @@ IMG_FORMAT_35x45_11 = '35x45_11'
 # Image config class that describes the cropping properties of the image
 class ImgConfig:
     dpi = 300
-    # Blur should be adjusted for each size, this is only for ImgX
-    blur_threshold = 30
 
-    # Maximum percentage of non white background. Should be adjusted for each size, this is only for ImgX
-    max_non_white_bg_pct = 1.5
-
-    def __init__(self, width, height, hw_range, hh_range):  # , emotions=tuple([EMOTION_NEUTRAL]), glasses=False):
+    def __init__(self, width, height, hw_range, hh_range, blur_threshold=30,
+                 max_non_white_bg_pct=1.5):  # , emotions=tuple([EMOTION_NEUTRAL]), glasses=False):
         self.w = width
         self.h = height
+        # Head width and height ranges
         self.hw_range = hw_range
         self.hh_range = hh_range
+
+        # Blur should be adjusted for each sizeX
+        self.blur_threshold = blur_threshold
+
+        # Maximum percentage of non white background. Should be adjusted for each size
+        self.max_non_white_bg_pct = max_non_white_bg_pct
+
         # self.allowed_emotions = emotions
         # self.glasses = glasses
 
@@ -58,11 +62,22 @@ Img35x45_11 = ImgConfig(width=35,
                         hw_range=(17.5, 25),
                         hh_range=(22.5, 36))
 
+ImgX = ImgConfig(width=18.6,
+                 height=25.4,
+                 hw_range=(14, 15),
+                 hh_range=(16, 17),
+                 blur_threshold=30,
+                 max_non_white_bg_pct=1.5)
 
+"""
+# V2 of the dimensions for x-ica
 ImgX = ImgConfig(width=25,
                  height=30,
                  hw_range=(16, 17),
-                 hh_range=(18, 20))
+                 hh_range=(18, 20),
+                 blur_threshold=30,
+                 max_non_white_bg_pct=1.5)
+"""
 
 """
 # The initial version of dimensions for x-ica
