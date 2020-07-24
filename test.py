@@ -19,7 +19,7 @@ def do_detect(stream_path):
 
 if __name__ == '__main__':
     # """
-    for i in sorted([f for f in os.listdir('imgs/') if f.split('.')[-1] in ['jpg', 'jpeg', 'png'] ]):
+    for i in sorted([f for f in os.listdir('imgs/') if f.split('.')[-1] in ['jpg', 'jpeg', 'png']]):
         do_detect(i)
     # """
     # do_detect('a.jpg')

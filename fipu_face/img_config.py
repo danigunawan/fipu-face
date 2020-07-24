@@ -67,7 +67,7 @@ ImgX = ImgConfig(width=18.6,
                  hw_range=(14, 15),
                  hh_range=(16, 17),
                  blur_threshold=30,
-                 max_non_white_bg_pct=1.5)
+                 max_non_white_bg_pct=2)
 
 """
 # V2 of the dimensions for x-ica
