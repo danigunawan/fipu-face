@@ -42,7 +42,7 @@ def get_non_white_bg_pct(frame):
     # White background mask
     # wb = cv2.inRange(hsv, lower_white, upper_white)
 
-    wb = cv2.inRange(hsv,  np.array([0, 0, 130]), np.array([255, 50, 255]))
+    wb = cv2.inRange(hsv,  np.array([0, 0, 110]), np.array([255, 50, 255]))
     # plt.imshow(wb)
     # 100 - cv2.countNonZero(wb) / background * 100
     # (total - cv2.countNonZero(wb)) / background * 100
@@ -53,15 +53,3 @@ def get_non_white_bg_pct(frame):
     # Portion of non-white background compared to the total area of the background
     # return (total - cv2.countNonZero(wb)) / background * 100
     return 100 - cv2.countNonZero(wb) / background * 100
-
-# Testing
-if __name__ == '__main__':
-    path = 'imgs/'
-    vals = {'imgs/': [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0],
-            'imgs/new/': [1, 1, 1, 1, 1, 1, 1, 1, 1]}
-
-    for i, j in zip(sorted([f for f in os.listdir(path) if f.split('.')[-1] in ['jpg', 'jpeg', 'png']]), vals[path]):
-        im = cv2.imread(path + i)
-        nwp = round(get_non_white_bg_pct(im), 2)
-        print(i, nwp, (nwp <= 1.5) == j)
-

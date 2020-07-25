@@ -66,7 +66,7 @@ ImgX = ImgConfig(width=18.6,
                  height=25.4,
                  hw_range=(14, 15),
                  hh_range=(16, 17),
-                 blur_threshold=30,
+                 blur_threshold=90,
                  max_non_white_bg_pct=2)
 
 """

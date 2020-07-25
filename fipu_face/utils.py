@@ -16,6 +16,7 @@
 import datetime
 import numpy as np
 import cv2
+import re
 
 # Default colors
 COLOR_BLUE = (255, 0, 0)
@@ -185,6 +186,7 @@ def draw_non_white_bg(img, f, color, thickness):
 def calc_thickness_scale(img):
     return max(1, round(max(img.shape[1] / 295, img.shape[0] / 354)))
 
+
 #   import cv2
 # from fipu_face.fipu_face import *
 # img = cv2.imread('imgs/new/r.jpg')
@@ -193,3 +195,8 @@ def calc_thickness_scale(img):
 # draw_non_white_bg(img, f, COLOR_WHITE, 2)
 # cv2.imwrite('imgs/new/r1.jpg', img)
 
+
+def sorted_alphanumeric(data):
+    convert = lambda text: int(text) if text.isdigit() else text.lower()
+    alphanum_key = lambda key: [convert(c) for c in re.split('([0-9]+)', key)]
+    return sorted(data, key=alphanum_key)

@@ -8,7 +8,7 @@ import os
 
 def do_detect(stream_path):
     print(stream_path)
-    frame = cv2.imread('imgs/' + stream_path)
+    frame = cv2.imread('imgs/' + stream_path, cv2.IMREAD_UNCHANGED)
     try:
         frame = detect(frame, imc=ImgX)
         cv2.imwrite('imgs/new/' + stream_path.replace('.jpg', '.jpg'), frame, [cv2.IMWRITE_JPEG_QUALITY, JPEG_QUALITY])
@@ -18,8 +18,7 @@ def do_detect(stream_path):
 
 
 if __name__ == '__main__':
-    # """
-    for i in sorted([f for f in os.listdir('imgs/') if f.split('.')[-1] in ['jpg', 'jpeg', 'png']]):
+    files = [f for f in os.listdir('imgs/') if f.split('.')[-1] in ['jpg', 'jpeg', 'png']]
+
+    for i in sorted_alphanumeric(files):
         do_detect(i)
-    # """
-    # do_detect('a.jpg')

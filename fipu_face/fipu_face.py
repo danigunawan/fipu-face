@@ -16,7 +16,7 @@ MAX_EYES_Y_DIFF_PCT = 3
 
 # Maximum percentage difference between left eye-nose : right eye-nose
 # This helps to detect if the person is looking to the side
-MAX_NOSE_EYES_DIST_DIFF_PCT = 8
+MAX_NOSE_EYES_DIST_DIFF_PCT = 10
 
 # When testing, when true draw bounding box and landmarks
 DRAW_MARKS = False
@@ -162,6 +162,7 @@ def check_face_alignment(frame, f, err):
 # Checks whether the image is blurry
 # The blur value also depends on the image resolution,
 # so each image configuration should have its own threshold
+# Old method which is not very stable
 def check_blur(frame, imc, err):
     # Convert to grayscale
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -171,6 +172,26 @@ def check_blur(frame, imc, err):
     if blur < imc.blur_threshold:
         err(BLURRY_IMAGE_EXCEPTION)
         # raise_error(BLURRY_IMAGE_EXCEPTION)
+
+
+def check_face_blur(frame, f, imc, err):
+    left = f.bbox[0]
+    top = f.bbox[1]
+    right = f.bbox[2]
+    bottom = f.bbox[3]
+
+    face = frame[int(top):int(bottom), int(left):int(right)]
+
+    # Scale the head to the approx size to what it would be in the final crop
+    # This way we get somewhat consistent results
+    scale = (imc.hh_range[1] / INCH * imc.dpi) / face.shape[0]
+    img = cv2.resize(face, None, None, fx=scale, fy=scale)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    blur = np.max(cv2.convertScaleAbs(cv2.Laplacian(img, cv2.CV_64F)))
+
+    # print(blur)
+    if blur < imc.blur_threshold:
+        err(BLURRY_IMAGE_EXCEPTION)
 
 
 # Ensures that only one faces is detected
@@ -183,15 +204,22 @@ def check_num_faces(faces):
 
 # Ensures that the background is white
 def check_white_bg(frame, imc, err):
-    import traceback
     try:
         non_white_pct = get_non_white_bg_pct(frame)
         # print('Non-white pct: {}'.format(round(non_white_pct, 3)))
         if non_white_pct > imc.max_non_white_bg_pct:
-            err(NON_WHITE_BG)
+            err(NON_WHITE_BG_EXCEPTION)
     except Exception as e:
-        traceback.print_exc()
+        # only occurs when the required tensorflow version is not installed
         print("Error while trying to detect background: ", e)
+
+
+def detect_face(frame):
+    # Detect the faces... images are scaled to the training resolution to speed up the detection
+    faces = rf.detect_faces(frame, scale=calc_scale(frame))
+
+    check_num_faces(faces)
+    return faces[0]
 
 
 # Detects and crop's the image if all checks are successful
@@ -200,19 +228,19 @@ def detect(frame, imc=ImgX):
     frame = alpha_to_white(frame)
 
     # start_time = time.time()
-    # Detect the faces... images are scaled to the training resolution to speed up the detection
-    faces = rf.detect_faces(frame, scale=calc_scale(frame))
+    f = detect_face(frame)
 
-    check_num_faces(faces)
-    f = faces[0]
+    # print(f.det_score)
+    err = ImageException(frame)
+
+    # Need to check before resizing and cropping
+    # otherwise we would need to perform another detection
+    check_face_blur(frame, f, imc, err)
 
     # Testing: face box and landmark drawing
     # Need to draw before cropping because the landmarks have the position on the initial frame
     if DRAW_MARKS:
         draw_marks(frame, f)
-
-    # print(f.det_score)
-    err = ImageException(frame)
 
     check_face_alignment(frame, f, err)
     # check_face_emotion(frame, f, imc)
@@ -222,7 +250,7 @@ def detect(frame, imc=ImgX):
     frame = scale_img(frame, imc)
 
     # Blur should only be checked after cropping/scaling since it also depends on the resolution
-    check_blur(frame, imc, err)
+    # check_blur(frame, imc, err)
 
     check_white_bg(frame, imc, err)
 
@@ -278,7 +306,7 @@ def draw_errors(frame, f, err):
         # Draw arrow to opposite direction to where the person is looking
         draw_head_tilt(frame, f, not err.get_payload(TILTED_HEAD_EXCEPTION), COLOR_RED, thickness)
 
-    if err.has_error(NON_WHITE_BG):
+    if err.has_error(NON_WHITE_BG_EXCEPTION):
         draw_non_white_bg(frame, f, COLOR_WHITE, thickness * 2)
 
 """
