@@ -18,7 +18,7 @@ IMG_ERRORS = {'1.jpg': [NON_WHITE_BG_EXCEPTION],
               'b7.png': [BLURRY_IMAGE_EXCEPTION],
               'c1.png': [PICTURED_TO_CLOSE_EXCEPTION],
               'c2.png': [TURNED_HEAD_EXCEPTION, PICTURED_TO_CLOSE_EXCEPTION],
-              'c3.png': [PICTURED_TO_CLOSE_EXCEPTION, NON_WHITE_BG_EXCEPTION],
+              'c3.png': [PICTURED_TO_CLOSE_EXCEPTION],
               'c4.png': [PICTURED_TO_CLOSE_EXCEPTION, NON_WHITE_BG_EXCEPTION],
               'c5.png': [PICTURED_TO_CLOSE_EXCEPTION],
               'd.jpg': [NON_WHITE_BG_EXCEPTION],
@@ -38,7 +38,6 @@ IMG_ERRORS = {'1.jpg': [NON_WHITE_BG_EXCEPTION],
               'mil2.png': [NON_WHITE_BG_EXCEPTION],
               'mil3.jpg': [NON_WHITE_BG_EXCEPTION],
               'n.jpg': [NON_WHITE_BG_EXCEPTION],
-              'n2.png': [NON_WHITE_BG_EXCEPTION],
               'n9.jpg': [NON_WHITE_BG_EXCEPTION],
               'n12.png': [NON_WHITE_BG_EXCEPTION],
               'n18.png': [NON_WHITE_BG_EXCEPTION],
@@ -46,35 +45,44 @@ IMG_ERRORS = {'1.jpg': [NON_WHITE_BG_EXCEPTION],
               'n21.png': [NON_WHITE_BG_EXCEPTION],
               'n22.png': [NON_WHITE_BG_EXCEPTION],
               'n24.png': [NON_WHITE_BG_EXCEPTION],
-              'n28.png': [NON_WHITE_BG_EXCEPTION],
+              'o1.png': [PICTURED_TO_CLOSE_EXCEPTION, NON_WHITE_BG_EXCEPTION],
+              'o2.png': [PICTURED_TO_CLOSE_EXCEPTION, BLURRY_IMAGE_EXCEPTION],
+              'o3.png': [PICTURED_TO_CLOSE_EXCEPTION],
+              'o4.png': [PICTURED_TO_CLOSE_EXCEPTION],
+              'o5.png': [PICTURED_TO_CLOSE_EXCEPTION],
+              'o6.png': [PICTURED_TO_CLOSE_EXCEPTION, BLURRY_IMAGE_EXCEPTION],
               'r1.jpg': [BLURRY_IMAGE_EXCEPTION],
-              'r2.jpg': [NON_WHITE_BG_EXCEPTION],
-              'r3.jpg': [NON_WHITE_BG_EXCEPTION],
-              'r4.jpg': [NON_WHITE_BG_EXCEPTION],
-              'r5.jpg': [BLURRY_IMAGE_EXCEPTION, TURNED_HEAD_EXCEPTION],
+              'r2.jpg': [BLURRY_IMAGE_EXCEPTION, NON_WHITE_BG_EXCEPTION],
+              'r5.jpg': [BLURRY_IMAGE_EXCEPTION],
               'r6.jpg': [BLURRY_IMAGE_EXCEPTION, PICTURED_TO_CLOSE_EXCEPTION, NON_WHITE_BG_EXCEPTION],
               'r9.jpg': [NON_WHITE_BG_EXCEPTION],
-              'r10.jpg': [BLURRY_IMAGE_EXCEPTION],
-              'r11.jpg': [NON_WHITE_BG_EXCEPTION],
-              'r12.jpg': [PICTURED_TO_CLOSE_EXCEPTION, NON_WHITE_BG_EXCEPTION],
+              'r12.jpg': [PICTURED_TO_CLOSE_EXCEPTION],
               'r13.jpg': [NON_WHITE_BG_EXCEPTION],
-              'r14.png': [BLURRY_IMAGE_EXCEPTION, TILTED_HEAD_EXCEPTION, NON_WHITE_BG_EXCEPTION],
-              'r15.png': [BLURRY_IMAGE_EXCEPTION, NON_WHITE_BG_EXCEPTION],
+              'r14.png': [BLURRY_IMAGE_EXCEPTION, TILTED_HEAD_EXCEPTION],
+              'r15.png': [BLURRY_IMAGE_EXCEPTION],
               'r16.png': [BLURRY_IMAGE_EXCEPTION, NON_WHITE_BG_EXCEPTION],
               'r17.png': [BLURRY_IMAGE_EXCEPTION, NON_WHITE_BG_EXCEPTION],
               'r18.png': [BLURRY_IMAGE_EXCEPTION],
-              'r19.png': [BLURRY_IMAGE_EXCEPTION, TILTED_HEAD_EXCEPTION, TURNED_HEAD_EXCEPTION, NON_WHITE_BG_EXCEPTION],
+              'r19.png': [TILTED_HEAD_EXCEPTION, TURNED_HEAD_EXCEPTION],
               'r20.png': [TILTED_HEAD_EXCEPTION],
-              'r21.png': [PICTURED_TO_CLOSE_EXCEPTION, NON_WHITE_BG_EXCEPTION],
-              'r22.png': [BLURRY_IMAGE_EXCEPTION, NON_WHITE_BG_EXCEPTION],
-              'r23.png': [BLURRY_IMAGE_EXCEPTION, NON_WHITE_BG_EXCEPTION],
-              'r24.png': [NON_WHITE_BG_EXCEPTION],
-              'r25.png': [BLURRY_IMAGE_EXCEPTION, NON_WHITE_BG_EXCEPTION],
-              'r27.png': [BLURRY_IMAGE_EXCEPTION, NON_WHITE_BG_EXCEPTION],
-              'r29.png': [PICTURED_TO_CLOSE_EXCEPTION, NON_WHITE_BG_EXCEPTION],
-              'r30.png': [NON_WHITE_BG_EXCEPTION],
-              'rm1.jpg': [BLURRY_IMAGE_EXCEPTION, NON_WHITE_BG_EXCEPTION, TILTED_HEAD_EXCEPTION],
-              'rm2.jpg': [BLURRY_IMAGE_EXCEPTION],
+              'r21.png': [PICTURED_TO_CLOSE_EXCEPTION],
+              'r22.png': [BLURRY_IMAGE_EXCEPTION],
+              'r25.png': [BLURRY_IMAGE_EXCEPTION],
+              'r27.png': [BLURRY_IMAGE_EXCEPTION],
+              'r29.png': [PICTURED_TO_CLOSE_EXCEPTION],
+              'r34.png': [NON_WHITE_BG_EXCEPTION],
+              'r36.png': [BLURRY_IMAGE_EXCEPTION],
+              'r37.png': [BLURRY_IMAGE_EXCEPTION],
+              'r38.png': [BLURRY_IMAGE_EXCEPTION, NON_WHITE_BG_EXCEPTION, TURNED_HEAD_EXCEPTION],
+              'r39.png': [BLURRY_IMAGE_EXCEPTION, TURNED_HEAD_EXCEPTION],
+              'r40.png': [BLURRY_IMAGE_EXCEPTION, NON_WHITE_BG_EXCEPTION],
+              'r41.png': [BLURRY_IMAGE_EXCEPTION],
+              'r42.png': [BLURRY_IMAGE_EXCEPTION, NON_WHITE_BG_EXCEPTION],
+              'r44.png': [BLURRY_IMAGE_EXCEPTION],
+              'r45.png': [NON_WHITE_BG_EXCEPTION, BLURRY_IMAGE_EXCEPTION],
+              'r47.png': [TURNED_HEAD_EXCEPTION],
+              'r54.png': [NON_WHITE_BG_EXCEPTION],
+              'rm1.jpg': [BLURRY_IMAGE_EXCEPTION, NON_WHITE_BG_EXCEPTION],
               'rm4.png': [BLURRY_IMAGE_EXCEPTION],
               'rm6.png': [TILTED_HEAD_EXCEPTION],
               'rm7.png': [BLURRY_IMAGE_EXCEPTION],
@@ -99,24 +107,41 @@ ACC_ERR_COUNT = {
 NOT_ACC_ERR_COUNT = ACC_ERR_COUNT.copy()
 
 
-def do_detect(stream_path):
+def diff(li1, li2):
+    return list(set(li1) - set(li2))
+
+
+def add_msc(err_l):
+    for err_msc in err_l:
+        NOT_ACC_ERR_COUNT[err_msc] += 1
+        print('Misclassified:', err_msc)
+
+
+def do_test_error(stream_path):
     print(stream_path)
     frame = cv2.imread('imgs/' + stream_path, cv2.IMREAD_UNCHANGED)
     try:
         detect(frame, imc=ImgX)
+        if stream_path in IMG_ERRORS:
+            add_msc(IMG_ERRORS[stream_path])
     except ImageException as e:
         errs = e.get_error_codes()
+
+        # There is no errors recorded in this image
+        if stream_path not in IMG_ERRORS:
+            add_msc(errs)
+            return
+
         for er in errs:
-            if stream_path not in IMG_ERRORS:
-                NOT_ACC_ERR_COUNT[er] += 1
-                print('Misclassified:', er)
-                continue
+            # Add error as accurate or misclassified
             im_errs = IMG_ERRORS[stream_path]
             if er in im_errs:
                 ACC_ERR_COUNT[er] += 1
             else:
-                NOT_ACC_ERR_COUNT[er] += 1
-                print('Misclassified:', er)
+                add_msc([er])
+
+        not_detected = diff(IMG_ERRORS[stream_path], errs)
+        add_msc(not_detected)
         # print(e.get_error_codes())
 
 
@@ -124,15 +149,15 @@ if __name__ == '__main__':
     files = [f for f in os.listdir('imgs/') if f.split('.')[-1] in ['jpg', 'jpeg', 'png']]
 
     for i in sorted_alphanumeric(files):
-        do_detect(i)
+        do_test_error(i)
 
     print('\n--- Accuracy ---\n')
     for err in ACC_ERR_COUNT:
         c, nc = ACC_ERR_COUNT[err], NOT_ACC_ERR_COUNT[err]
-        count = c + nc
-        if count > 0:
-            acc = c / count
+
+        if nc > 0:
+            acc = 1 - (nc / len(files))
         else:
             acc = 1
 
-        print("{}: {:.3f}".format(err, acc*100))
+        print("{}: {:.3f} ({})".format(err, acc * 100, nc))

@@ -16,7 +16,7 @@ MAX_EYES_Y_DIFF_PCT = 3
 
 # Maximum percentage difference between left eye-nose : right eye-nose
 # This helps to detect if the person is looking to the side
-MAX_NOSE_EYES_DIST_DIFF_PCT = 10
+MAX_NOSE_EYES_DIST_DIFF_PCT = 9
 
 # When testing, when true draw bounding box and landmarks
 DRAW_MARKS = False
@@ -185,13 +185,15 @@ def check_face_blur(frame, f, imc, err):
     # Also is it necessary to check for blur when the whole face is not in frame?
     face = frame[max(0, int(top)):min(int(bottom), h), min(0, int(left)):max(w, int(right))]
 
+    h, w = face.shape[:2]
+    # print(h, w)
     # Scale the head to the approx size to what it would be in the final crop
     # This way we get somewhat consistent results
-    scale = (imc.hh_range[1] / INCH * imc.dpi) / face.shape[0]
-    img = cv2.resize(face, None, None, fx=scale, fy=scale)
+    scale_y = (imc.hh_range[1] / INCH * imc.dpi) / h
+    scale_x = w / h * scale_y * h / w
+    img = cv2.resize(face, None, None, fx=scale_x, fy=scale_y)
     img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     blur = np.max(cv2.convertScaleAbs(cv2.Laplacian(img, cv2.CV_64F)))
-
     # print('Blur: {}'.format(round(blur, 3)))
     if blur < imc.blur_threshold:
         err(BLURRY_IMAGE_EXCEPTION)
