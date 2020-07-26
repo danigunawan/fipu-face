@@ -180,7 +180,10 @@ def check_face_blur(frame, f, imc, err):
     right = f.bbox[2]
     bottom = f.bbox[3]
 
-    face = frame[int(top):int(bottom), int(left):int(right)]
+    h, w = frame.shape[:2]
+    # Since the face can be outside the frame, the image would be empty with negative numbers
+    # Also is it necessary to check for blur when the whole face is not in frame?
+    face = frame[max(0, int(top)):min(int(bottom), h), min(0, int(left)):max(w, int(right))]
 
     # Scale the head to the approx size to what it would be in the final crop
     # This way we get somewhat consistent results
@@ -189,7 +192,7 @@ def check_face_blur(frame, f, imc, err):
     img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     blur = np.max(cv2.convertScaleAbs(cv2.Laplacian(img, cv2.CV_64F)))
 
-    # print(blur)
+    # print('Blur: {}'.format(round(blur, 3)))
     if blur < imc.blur_threshold:
         err(BLURRY_IMAGE_EXCEPTION)
 
