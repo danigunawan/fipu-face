@@ -200,11 +200,15 @@ def check_face_blur(frame, f, imc, err):
 
 
 # Ensures that only one faces is detected
-def check_num_faces(faces):
+def check_num_faces(faces, err):
     if len(faces) == 0:
-        raise_error(NO_FACES_EXCEPTION)
+        # raise_error(NO_FACES_EXCEPTION)
+        err(NO_FACES_EXCEPTION)
+        raise err
     elif len(faces) > 1:
-        raise_error(TOO_MANY_FACES_EXCEPTION, [len(faces)])
+        # raise_error(TOO_MANY_FACES_EXCEPTION, [len(faces)])
+        err(TOO_MANY_FACES_EXCEPTION, [len(faces)])
+        raise err
 
 
 # Ensures that the background is white
@@ -219,28 +223,21 @@ def check_white_bg(frame, imc, err):
         print("Error while trying to detect background: ", e)
 
 
-def detect_face(frame):
+def detect_face(frame, err):
     # Detect the faces... images are scaled to the training resolution to speed up the detection
     faces = rf.detect_faces(frame, scale=calc_scale(frame))
 
-    check_num_faces(faces)
+    check_num_faces(faces, err)
     return faces[0]
 
 
-# Detects and crop's the image if all checks are successful
-def detect(frame, imc=ImgX):
-
+def pre_process_check(frame):
     frame = alpha_to_white(frame)
 
-    # start_time = time.time()
-    f = detect_face(frame)
+    err = ImageException(frame)
+    f = detect_face(frame, err)
 
     # print(f.det_score)
-    err = ImageException(frame)
-
-    # Need to check before resizing and cropping
-    # otherwise we would need to perform another detection
-    check_face_blur(frame, f, imc, err)
 
     # Testing: face box and landmark drawing
     # Need to draw before cropping because the landmarks have the position on the initial frame
@@ -248,56 +245,67 @@ def detect(frame, imc=ImgX):
         draw_marks(frame, f)
 
     check_face_alignment(frame, f, err)
-    # check_face_emotion(frame, f, imc)
-    # check_face_obstacles(frame, f, imc)
+    return frame, f, err
 
-    frame = crop_img(frame, f, imc, err)
-    frame = scale_img(frame, imc)
 
-    # Blur should only be checked after cropping/scaling since it also depends on the resolution
-    # check_blur(frame, imc, err)
+# Detects and crop's the image if all checks are successful
+def detect(frame, imcs=None):
+    imcs = imcs or [ImgX]  # Default value
 
-    check_white_bg(frame, imc, err)
+    # Do the pre checks which are irrelevant of the image size
+    frame, f, err = pre_process_check(frame)
+    frames = {}
+    for imc in imcs:
+        # Need to check before resizing and cropping
+        # otherwise we would need to perform another detection
+        check_face_blur(frame, f, imc, err)
 
-    # Testing: ellipse around the head
-    if DRAW_MARKS:
-        draw_ellipses(frame, imc)
+        __frame = crop_img(frame, f, imc, err)
+        __frame = scale_img(__frame, imc)
 
-    # print("--- %s seconds ---" % (round(time.time() - start_time, 3)))
+        # Check background of the final image
+        check_white_bg(__frame, imc, err)
+
+        # Testing: ellipse around the head
+        if DRAW_MARKS:
+            draw_ellipses(__frame, imc)
+
+        frames[imc.name] = __frame
 
     if err.has_errors():
         draw_errors(err.image, f, err)
         raise err
 
-    return frame
+    return frames if len(imcs) > 1 else frames[imcs[0].name]
 
 
 # Shortcut method to crop the image and covert it back to the given format
-def __do_detect(frame, img_format=IMG_FORMAT_X, encoding=ENCODING_BASE64):
-    frame = detect(frame, get_format(img_format))
-    return convert_img(frame, encoding)
+def __do_detect(frame, img_formats, encoding):
+    frames = detect(frame, [get_format(f) for f in img_formats])
+    for img_fmt in frames.keys():
+        frames[img_fmt] = convert_img(frames[img_fmt], encoding)
+    return frames
 
 
 # API method called when the file is uploaded using standard file upload
-def get_from_file(file, img_format=IMG_FORMAT_X, encoding=ENCODING_BASE64):
-    return __do_detect(cv2_read_img(file.read()), img_format, encoding)
+def get_from_file(file, img_formats, encoding):
+    return __do_detect(cv2_read_img(file.read()), img_formats, encoding)
 
 
 # API method called when the file is uploaded as a field in base64 format
-def get_from_base64(uri, img_format=IMG_FORMAT_X, encoding=ENCODING_BASE64):
+def get_from_base64(uri, img_formats, encoding):
     # Just in case the uri contains base64 prefix, split and take the last part
     encoded_data = uri.split('base64,')[-1]
     img = cv2_read_img(base64.b64decode(encoded_data))
-    return __do_detect(img, img_format, encoding)
+    return __do_detect(img, img_formats, encoding)
 
 
 # API method called when the file is uploaded as a field in bytes format
-def get_from_bytes(img_bytes, img_format=IMG_FORMAT_X, encoding=ENCODING_BASE64):
-    return __do_detect(cv2_read_img(img_bytes), img_format, encoding)
+def get_from_bytes(img_bytes, img_formats, encoding):
+    return __do_detect(cv2_read_img(img_bytes), img_formats, encoding)
 
 
 def draw_errors(frame, f, err):
-
     thickness = 2 * calc_thickness_scale(frame)
 
     if err.has_error(PICTURED_TO_CLOSE_EXCEPTION):
@@ -313,6 +321,7 @@ def draw_errors(frame, f, err):
 
     if err.has_error(NON_WHITE_BG_EXCEPTION):
         draw_non_white_bg(frame, f, COLOR_WHITE, thickness * 2)
+
 
 """
 def check_face_emotion(frame, f, imc):

@@ -14,6 +14,8 @@
 # from fipu_face.facial_landmarks.emotion import *
 
 IMG_FORMAT_X = 'x'
+IMG_FORMAT_X_220x300 = 'x_220x300'
+IMG_FORMAT_X_300x300 = 'x_300x300'
 IMG_FORMAT_30x35_11Plus = '30x35_11Plus'
 IMG_FORMAT_30x35_11 = '30x35_11'
 IMG_FORMAT_35x45_11Plus = '35x45_11Plus'
@@ -23,6 +25,7 @@ IMG_FORMAT_35x45_11 = '35x45_11'
 # Image config class that describes the cropping properties of the image
 class ImgConfig:
     dpi = 300
+    name = None
 
     def __init__(self, width, height, hw_range, hh_range, blur_threshold=30,
                  max_non_white_bg_pct=1.5):  # , emotions=tuple([EMOTION_NEUTRAL]), glasses=False):
@@ -62,13 +65,21 @@ Img35x45_11 = ImgConfig(width=35,
                         hw_range=(17.5, 25),
                         hh_range=(22.5, 36))
 
-ImgX = ImgConfig(width=18.6,
-                 height=25.4,
-                 hw_range=(14, 15),
-                 hh_range=(16, 17),
-                 blur_threshold=90,
-                 max_non_white_bg_pct=2)
+ImgX_300x300 = ImgConfig(width=25.4,
+                         height=25.4,
+                         hw_range=(16, 17),
+                         hh_range=(16, 17),
+                         blur_threshold=90,
+                         max_non_white_bg_pct=2)
 
+# V3 - small x-ica: 220x300
+ImgX_220x300 = ImgConfig(width=18.6,
+                         height=25.4,
+                         hw_range=(14, 15),
+                         hh_range=(16, 17),
+                         blur_threshold=90,
+                         max_non_white_bg_pct=2)
+ImgX = ImgX_220x300
 """
 # V2 of the dimensions for x-ica
 ImgX = ImgConfig(width=25,
@@ -90,12 +101,17 @@ ImgX = ImgConfig(width=25,
 """
 
 __all_formats = {
-    IMG_FORMAT_X: ImgX,
-    IMG_FORMAT_30x35_11Plus: IMG_FORMAT_30x35_11Plus,
-    IMG_FORMAT_30x35_11: IMG_FORMAT_30x35_11,
-    IMG_FORMAT_35x45_11Plus: IMG_FORMAT_35x45_11Plus,
-    IMG_FORMAT_35x45_11: IMG_FORMAT_35x45_11
+    # IMG_FORMAT_X: ImgX,
+    IMG_FORMAT_X_220x300: ImgX_220x300,
+    IMG_FORMAT_X_300x300: ImgX_300x300,
+    IMG_FORMAT_30x35_11Plus: Img30x35_11Plus,
+    IMG_FORMAT_30x35_11: Img30x35_11,
+    IMG_FORMAT_35x45_11Plus: Img35x45_11Plus,
+    IMG_FORMAT_35x45_11: Img35x45_11
 }
+
+for k, v in __all_formats.items():
+    v.name = k
 
 
 # Get format by name

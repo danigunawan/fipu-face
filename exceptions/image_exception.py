@@ -68,6 +68,8 @@ class ImageException(Exception):
         return detail
 
     def __call__(self, msg, tokens=None, payload=None):
+        if self.has_error(msg):
+            return
         err_msg = {'message': self.__bind_msg(msg, tokens), 'error_code': msg}
         if payload:
             err_msg['payload'] = payload

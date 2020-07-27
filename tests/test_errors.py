@@ -1,5 +1,6 @@
 from fipu_face.fipu_face import *
 import os
+import time
 
 ##############################
 #   TESTING   IMAGE ERRORS   #
@@ -106,6 +107,8 @@ ACC_ERR_COUNT = {
 
 NOT_ACC_ERR_COUNT = ACC_ERR_COUNT.copy()
 
+PROCESS_TIMES = []
+
 
 def diff(li1, li2):
     return list(set(li1) - set(li2))
@@ -121,10 +124,14 @@ def do_test_error(stream_path):
     print(stream_path)
     frame = cv2.imread('imgs/' + stream_path, cv2.IMREAD_UNCHANGED)
     try:
-        detect(frame, imc=ImgX)
+        start_time = time.time()
+        detect(frame, imcs=[ImgX_220x300, ImgX_300x300])
+        PROCESS_TIMES.append(time.time() - start_time)
+
         if stream_path in IMG_ERRORS:
             add_msc(IMG_ERRORS[stream_path])
     except ImageException as e:
+        PROCESS_TIMES.append(time.time() - start_time)
         errs = e.get_error_codes()
 
         # There is no errors recorded in this image
@@ -161,3 +168,5 @@ if __name__ == '__main__':
             acc = 1
 
         print("{}: {:.3f} ({})".format(err, acc * 100, nc))
+
+    print("\nAvg time: %s seconds ---" % (round(np.mean(np.array(PROCESS_TIMES)), 3)))

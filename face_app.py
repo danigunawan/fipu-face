@@ -13,7 +13,7 @@ IMG_FILE = 'img'
 IMG_FILE64 = 'img64'
 IMG_FILE_BYTES = 'img_bytes'
 IMG_RESPONSE_ENCODING = 'resp_enc'
-IMG_FMT = 'img_fmt'
+IMG_FMT = 'img_sizes'
 
 ALLOWED_KEYS = (IMG_FILE, IMG_FILE64, IMG_FILE_BYTES)
 
@@ -46,12 +46,43 @@ def get_response_encoding():
     return get_value(IMG_RESPONSE_ENCODING) or fipu_face.ENCODING_BASE64
 
 
-def get_img_format():
-    return get_value(IMG_FMT) or fipu_face.IMG_FORMAT_X
+def remap_format(fmt):
+    if type(fmt) in [tuple, list]:
+        return 'x_{}x{}'.format(*fmt)
+    return fmt
 
 
-def create_response(img):
-    resp = jsonify({'img': img})
+# Format should be a dictionary, string, or a list
+def get_img_formats():
+    val = get_value(IMG_FMT)
+    if type(val) is dict:
+        for k in val.keys():
+            val[k] = remap_format(val[k])
+
+    elif type(val) is str:
+        val = {'img': val}
+    elif type(val) in [tuple, list]:
+        d = dict()
+        for i, v in enumerate(val):
+            d['img{}'.format(i)] = v
+        val = d
+    return val or {'img': fipu_face.IMG_FORMAT_X}
+
+
+def get_img_formats_list():
+    fmts = get_img_formats()
+    return fmts.values()
+
+
+def create_response(imgs):
+    r_imgs = dict()
+    # resp = jsonify({'img': img})
+
+    formats = get_img_formats()
+    for k, v in formats.items():
+        r_imgs[k] = imgs[v]
+
+    resp = jsonify(r_imgs)
     resp.status_code = 201
     return resp
 
@@ -63,8 +94,8 @@ def handle_file():
         resp.status_code = 400
         return resp
     if file and allowed_file(file.filename):
-        img = fipu_face.get_from_file(request.files[IMG_FILE], get_img_format(), get_response_encoding())
-        return create_response(img)
+        imgs = fipu_face.get_from_file(request.files[IMG_FILE], get_img_formats_list(), get_response_encoding())
+        return create_response(imgs)
     else:
         resp = jsonify({'message': 'Allowed file types are {0}'.format(ALLOWED_EXTENSIONS)})
         resp.status_code = 400
@@ -78,13 +109,13 @@ def upload_file():
 
     elif is_file64():
         file64 = get_value(IMG_FILE64)
-        img = fipu_face.get_from_base64(file64, get_img_format(), get_response_encoding())
-        return create_response(img)
+        imgs = fipu_face.get_from_base64(file64, get_img_formats_list(), get_response_encoding())
+        return create_response(imgs)
 
     elif is_file_bytes():
         file_bytes = get_value(IMG_FILE_BYTES)
-        img = fipu_face.get_from_bytes(file_bytes, get_img_format(), get_response_encoding())
-        return create_response(img)
+        imgs = fipu_face.get_from_bytes(file_bytes, get_img_formats_list(), get_response_encoding())
+        return create_response(imgs)
 
     resp = jsonify({'message': 'No image in the request. Use {} in either form or json request'.format(ALLOWED_KEYS)})
     resp.status_code = 400
