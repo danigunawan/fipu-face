@@ -120,24 +120,18 @@ def handle_file():
 
 @app.route('/crop-face', methods=['POST'])
 def upload_file():
-    try:
-        if is_file():
-            return handle_file()
+    if is_file():
+        return handle_file()
 
-        elif is_file64():
-            file64 = get_value(IMG_FILE64)
-            imgs = fipu_face.get_from_base64(file64, get_img_formats_list(), get_response_encoding())
-            return create_response(imgs)
+    elif is_file64():
+        file64 = get_value(IMG_FILE64)
+        imgs = fipu_face.get_from_base64(file64, get_img_formats_list(), get_response_encoding())
+        return create_response(imgs)
 
-        elif is_file_bytes():
-            file_bytes = get_value(IMG_FILE_BYTES)
-            imgs = fipu_face.get_from_bytes(file_bytes, get_img_formats_list(), get_response_encoding())
-            return create_response(imgs)
-    except Exception as e:
-        bugsnag.notify(e)
-        resp = jsonify({'message': 'An error has occurred while processing the image. Please try again a few moments.'})
-        resp.status_code = 400
-        return resp
+    elif is_file_bytes():
+        file_bytes = get_value(IMG_FILE_BYTES)
+        imgs = fipu_face.get_from_bytes(file_bytes, get_img_formats_list(), get_response_encoding())
+        return create_response(imgs)
 
     resp = jsonify({'message': 'No image in the request. Use {} in either form or json request'.format(ALLOWED_KEYS)})
     resp.status_code = 400
@@ -152,6 +146,17 @@ def handle_image_exception(error):
     response = jsonify(errors)
 
     response.status_code = error.status_code
+    return response
+
+
+@app.errorhandler(Exception)
+def handle_exception(e):
+    bugsnag.notify(e)
+    errors = dict()
+    errors['errors'] = [{'message': 'An error has occurred while processing the image. Please try again in a few moments.', 'error_code': 'server_error'}]
+    response = jsonify(errors)
+
+    response.status_code = 500
     return response
 
 
