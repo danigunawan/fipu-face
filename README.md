@@ -23,7 +23,8 @@ All errors (and appropriate messages) are stored in [ImageException.py](exceptio
 If none of the errors are detected on the image, the face is cropped and resize'd to the desired format.
 
 Supported formats:
-- **x** (18.6x25.4)
+- **x_220x300** (18.6x25.4)
+- **x_300x300** (25.4x25.4)
 - **30x35_11Plus**
 - **30x35_11**
 - **35x45_11Plus**
@@ -39,7 +40,17 @@ Supported formats:
 2. Uploading a file in base64 encoding using form/json (param name ***img64***)
 3. Uploading a file encoded as bytes using form/json (param name ***img_bytes***)
 4. Specifying output encoding using form/json (param name ***resp_enc***)
-5. Specifying image format using form/json (param name **img_fmt**)
+5. Specifying image format(s) using form/json (param name **img_sizes**) (string, list, dictionary)
+
+
+Request example:
+```python
+{"img64": "/9/dsjdias...", # Original image in base64 format
+ "img_sizes": {"img_big": "x_300x300", "img_small": "x_220x300"} # Or "x_220x300", or ["x_220x300", "x_300x300"]
+}
+
+```
+
 
 Response returns two types of json objects:
 
@@ -53,11 +64,30 @@ Response returns two types of json objects:
 
 - When image processing completed successfully
 
+If only one format was asked
+
 ```python
-{"img": "/9/dsjdias...."} # Processed image in base64/bytes format
+{"img": "/9/dsjdias...."} # Processed image in base64/bytes format 
+```
+
+If multiple formats were asked (list, or tuple)
+
+```python
+{
+ "img0": "/9/dsjdias....", # Processed image in base64/bytes format 
+ "img1": "/9/dsjdias...." # Processed image in base64/bytes format
+}
 ```
 
 
+If multiple formats were asked (dictionary)
+
+```python
+{
+ "img_big": "/9/dsjdias....", # Processed image in base64/bytes format using the key form the request 
+ "img_small": "/9/dsjdias...."# Processed image in base64/bytes format using the key form the request
+}
+```
 
 
 
@@ -97,10 +127,10 @@ def do_detect(stream_path):
     print(stream_path)
     frame = cv2.imread('imgs/' + stream_path)
     try:
-        frame = detect(frame, imc=ImgX)
+        frame = detect(frame)
         cv2.imwrite('imgs/new/' + stream_path.replace('.jpg', '.jpg'), frame, [cv2.IMWRITE_JPEG_QUALITY, JPEG_QUALITY])
     except ImageException as e:
-        cv2.imwrite('imgs/draw/' + stream_path, frame, [cv2.IMWRITE_JPEG_QUALITY, JPEG_QUALITY])
+        cv2.imwrite('imgs/draw/' + stream_path, e.image, [cv2.IMWRITE_JPEG_QUALITY, JPEG_QUALITY])
         print(e.get_error_codes())
 
 
@@ -110,7 +140,7 @@ if __name__ == '__main__':
 ```
 
 
-You can also check how your face is cropped, and what errors are displayed, in real time by running `camera_test.py`
+You can also check how your face is cropped, and what errors are displayed, in real time by running `tests/camera_test.py`
 
 
 ## Future features

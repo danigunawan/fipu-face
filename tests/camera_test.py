@@ -11,7 +11,7 @@ def draw_predict_info(frame, msg):
 
     height, width = frame.shape[:2]
     fontScale = width / 1000
-    COLOR_RED = (0, 0, 255)
+
     for i, line in enumerate(text_list):
         cv2.putText(frame, line, (10, (i + 1) * int(30 * fontScale)),
                     cv2.FONT_HERSHEY_SIMPLEX, fontScale, COLOR_RED, 2)
@@ -19,7 +19,7 @@ def draw_predict_info(frame, msg):
 
 def detect_on_img(frame):
     try:
-        frame = detect(frame, imc=ImgX)
+        frame = detect(frame)
 
         return frame
     except ImageException as e:
