@@ -113,8 +113,25 @@ If multiple formats were asked (dictionary)
 
 ## Cropping your own image
 
+### Setup
+
+#### Install required packages
+
+````bash
+pip install -r requirements.txt
+````
+
 Place your image in `imgs` folder and run `test.py`. New image would be placed under the same name in `imgs/new` folder. If the validation fails the image, with the errors on the image, will be placed in `imgs/draw`.
 The error codes of the exceptions will also bi printed in the console.
+
+## Environment
+
+Create a `.env` file with following content (adjustment needed):
+```bash
+FLASK_ENV=development
+BUGSNAG_API_KEY=
+```
+
 
 ##### `Test.py code`
 

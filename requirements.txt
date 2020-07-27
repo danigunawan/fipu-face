@@ -5,3 +5,5 @@ flask
 insightface==0.1.5
 mxnet==1.6.0
 numpy
+python-dotenv
+bugsnag[flask]
