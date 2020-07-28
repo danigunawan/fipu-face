@@ -70,7 +70,7 @@ ImgX_300x300 = ImgConfig(width=25.4,
                          hw_range=(16, 17),
                          hh_range=(16, 17),
                          blur_threshold=90,
-                         max_non_white_bg_pct=4)
+                         max_non_white_bg_pct=2)
 
 # V3 - small x-ica: 220x300
 ImgX_220x300 = ImgConfig(width=18.6,
@@ -78,7 +78,7 @@ ImgX_220x300 = ImgConfig(width=18.6,
                          hw_range=(14, 15),
                          hh_range=(16, 17),
                          blur_threshold=90,
-                         max_non_white_bg_pct=4)
+                         max_non_white_bg_pct=2)
 ImgX = ImgX_220x300
 """
 # V2 of the dimensions for x-ica
