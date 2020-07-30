@@ -215,12 +215,25 @@ def check_num_faces(faces, err):
 def check_white_bg(frame, imc, err):
     try:
         non_white_pct = get_non_white_bg_pct(frame)
-        # print('Non-white pct: {}'.format(round(non_white_pct, 3)))
+        print('Non-white pct: {}'.format(round(non_white_pct, 3)))
         if non_white_pct > imc.max_non_white_bg_pct:
             err(NON_WHITE_BG_EXCEPTION)
     except Exception as e:
         # only occurs when the required tensorflow version is not installed
         print("Error while trying to detect background: ", e)
+
+
+# Ensures that the background is white
+def is_not_white_bg(frame, imc):
+    try:
+        non_white_pct = get_non_white_bg_pct(frame)
+        print('Non-white pct: {}'.format(round(non_white_pct, 3)))
+        if non_white_pct > imc.max_non_white_bg_pct:
+            return True
+    except Exception as e:
+        # only occurs when the required tensorflow version is not installed
+        print("Error while trying to detect background: ", e)
+    return False
 
 
 def detect_face(frame, err):
@@ -255,6 +268,9 @@ def detect(frame, imcs=None):
     # Do the pre checks which are irrelevant of the image size
     frame, f, err = pre_process_check(frame)
     frames = {}
+
+    # Quick fix za background problem
+    white_checks = []
     for imc in imcs:
         # Need to check before resizing and cropping
         # otherwise we would need to perform another detection
@@ -264,13 +280,17 @@ def detect(frame, imcs=None):
         __frame = scale_img(__frame, imc)
 
         # Check background of the final image
-        check_white_bg(__frame, imc, err)
+        # check_white_bg(__frame, imc, err)
+        white_checks.append(is_not_white_bg(__frame, imc))
 
         # Testing: ellipse around the head
         if DRAW_MARKS:
             draw_ellipses(__frame, imc)
 
         frames[imc.name] = __frame
+
+    if all(white_checks):
+        err(NON_WHITE_BG_EXCEPTION)
 
     if err.has_errors():
         draw_errors(err.image, f, err)
