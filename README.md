@@ -164,12 +164,15 @@ You can also check how your face is cropped, and what errors are displayed, in r
 
 - [x] Image cropping for [official documents](https://mup.gov.hr/UserDocsImages/BannerZona/Upute%20za%20fotografije%202013%20(2).pdf) (in Croatia)
 - [ ] Emotion detection - government document should have neutral emotion
-- [ ] Check for face obstacles (eg. glasses, mask, hand in front of face) 
+- [ ] Check for face obstacles (eg. glasses, mask, hand in front of face)
+- [ ] More accurate background color detection
+- [ ] Portrait matting - using [PyMatting](https://github.com/pymatting/pymatting)?
 
 
 ## References
 
 - [RetinaFace](https://github.com/deepinsight/insightface/tree/master/RetinaFace) - Face detection
+- [Portrait Segmentation](https://github.com/anilsathyan7/Portrait-Segmentation) - Non white background detection
 - [FER](https://pypi.org/project/fer/) - Facial expression recognition (in progress)
 - [Real-time Glasses Detection](https://github.com/TianxingWu/realtime-glasses-detection) - Glasses detection (in progress)
 - [Flask](https://flask.palletsprojects.com/en/1.1.x/) - API

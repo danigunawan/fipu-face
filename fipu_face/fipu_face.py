@@ -5,7 +5,7 @@ from fipu_face.utils import *
 from fipu_face.img_utils import *
 from exceptions.image_exception import *
 from fipu_face.img_config import *
-from fipu_face.segregation.segregation import get_non_white_bg_pct
+from fipu_face.segmentation.bg_segmentation import get_non_white_bg_pct
 
 # from fipu_face.facial_landmarks.emotion import *
 # from fipu_face.facial_landmarks.glasses import has_glasses
@@ -215,7 +215,7 @@ def check_num_faces(faces, err):
 def check_white_bg(frame, imc, err):
     try:
         non_white_pct = get_non_white_bg_pct(frame)
-        print('Non-white pct: {}'.format(round(non_white_pct, 3)))
+        # print('Non-white pct: {}'.format(round(non_white_pct, 3)))
         if non_white_pct > imc.max_non_white_bg_pct:
             err(NON_WHITE_BG_EXCEPTION)
     except Exception as e:
@@ -227,7 +227,7 @@ def check_white_bg(frame, imc, err):
 def is_not_white_bg(frame, imc):
     try:
         non_white_pct = get_non_white_bg_pct(frame)
-        print('Non-white pct: {}'.format(round(non_white_pct, 3)))
+        # print('Non-white pct: {}'.format(round(non_white_pct, 3)))
         if non_white_pct > imc.max_non_white_bg_pct:
             return True
     except Exception as e:
@@ -270,7 +270,7 @@ def detect(frame, imcs=None):
     frames = {}
 
     # Quick fix za background problem
-    white_checks = []
+    # white_checks = []
     for imc in imcs:
         # Need to check before resizing and cropping
         # otherwise we would need to perform another detection
@@ -280,8 +280,8 @@ def detect(frame, imcs=None):
         __frame = scale_img(__frame, imc)
 
         # Check background of the final image
-        # check_white_bg(__frame, imc, err)
-        white_checks.append(is_not_white_bg(__frame, imc))
+        check_white_bg(__frame, imc, err)
+        # white_checks.append(is_not_white_bg(__frame, imc))
 
         # Testing: ellipse around the head
         if DRAW_MARKS:
@@ -289,8 +289,8 @@ def detect(frame, imcs=None):
 
         frames[imc.name] = __frame
 
-    if all(white_checks):
-        err(NON_WHITE_BG_EXCEPTION)
+    # if all(white_checks):
+    #     err(NON_WHITE_BG_EXCEPTION)
 
     if err.has_errors():
         draw_errors(err.image, f, err)
