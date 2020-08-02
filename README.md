@@ -32,13 +32,13 @@ Supported formats:
 
 
 
-#### The repo also provides Flask API which crops the image and returns the processed image as the response in either `base64` or `bytes` format.
+#### The repo also provides Flask API which crops the image and returns the processed image as the response in either `base64` or `bytes` (iso-8859-1) format.
 
 ##### Service supports uploading a file on the route `crop-face` with following options:
 
 1. Uploading a file through a form (param name ***img***)
 2. Uploading a file in base64 encoding using form/json (param name ***img64***)
-3. Uploading a file encoded as bytes using form/json (param name ***img_bytes***)
+3. Uploading a file encoded as bytes using form/json (param name ***img_bytes***) (iso-8859-1)
 4. Specifying output encoding using form/json (param name ***resp_enc***)
 5. Specifying image format(s) using form/json (param name **img_sizes**) (string, list, dictionary)
 
@@ -67,15 +67,15 @@ Response returns two types of json objects:
 If only one format was asked
 
 ```python
-{"img": "/9/dsjdias...."} # Processed image in base64/bytes format 
+{"img": "/9/dsjdias...."} # Processed image in base64/bytes(iso-8859-1) format 
 ```
 
 If multiple formats were asked (list, or tuple)
 
 ```python
 {
- "img0": "/9/dsjdias....", # Processed image in base64/bytes format 
- "img1": "/9/dsjdias...." # Processed image in base64/bytes format
+ "img0": "/9/dsjdias....", # Processed image in base64/bytes(iso-8859-1) format 
+ "img1": "/9/dsjdias...." # Processed image in base64/bytes(iso-8859-1) format
 }
 ```
 
@@ -84,8 +84,8 @@ If multiple formats were asked (dictionary)
 
 ```python
 {
- "img_big": "/9/dsjdias....", # Processed image in base64/bytes format using the key form the request 
- "img_small": "/9/dsjdias...."# Processed image in base64/bytes format using the key form the request
+ "img_big": "/9/dsjdias....", # Processed image in base64/bytes(iso-8859-1) format using the key form the request 
+ "img_small": "/9/dsjdias...."# Processed image in base64/bytes(iso-8859-1) format using the key form the request
 }
 ```
 
@@ -157,7 +157,7 @@ if __name__ == '__main__':
 ```
 
 
-You can also check how your face is cropped, and what errors are displayed, in real time by running `tests/camera_test.py`
+You can also check how your face is cropped, and what errors are displayed, in real time by running `tests/camera.py`
 
 
 ## Future features

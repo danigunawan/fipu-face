@@ -22,6 +22,10 @@ IMG_FMT = 'img_sizes'
 
 ALLOWED_KEYS = (IMG_FILE, IMG_FILE64, IMG_FILE_BYTES)
 
+
+NO_IMAGE_ERROR = 'No image in the request. Use {} in either form or json request'.format(ALLOWED_KEYS)
+
+
 load_dotenv()
 STAGE = os.environ.get("STAGE", os.environ.get("FLASK_ENV", "development"))
 if STAGE != "development" and "BUGSNAG_API_KEY" in os.environ and os.environ.get("BUGSNAG_API_KEY"):
@@ -71,6 +75,8 @@ def remap_format(fmt):
 # Format should be a dictionary, string, or a list
 def get_img_formats():
     val = get_value(IMG_FMT)
+    print(type(val), val)
+
     if type(val) is dict:
         for k in val.keys():
             val[k] = remap_format(val[k])
@@ -78,6 +84,7 @@ def get_img_formats():
     elif type(val) is str:
         val = {'img': val}
     elif type(val) in [tuple, list]:
+        print(val)
         d = dict()
         for i, v in enumerate(val):
             d['img{}'.format(i)] = v
@@ -87,7 +94,8 @@ def get_img_formats():
 
 def get_img_formats_list():
     fmts = get_img_formats()
-    return fmts.values()
+    print('list', list(fmts.values()))
+    return list(fmts.values())
 
 
 def create_response(imgs):
@@ -95,6 +103,7 @@ def create_response(imgs):
     # resp = jsonify({'img': img})
 
     formats = get_img_formats()
+    print(formats)
     for k, v in formats.items():
         r_imgs[k] = imgs[v]
 
@@ -122,18 +131,16 @@ def handle_file():
 def upload_file():
     if is_file():
         return handle_file()
-
     elif is_file64():
         file64 = get_value(IMG_FILE64)
         imgs = fipu_face.get_from_base64(file64, get_img_formats_list(), get_response_encoding())
         return create_response(imgs)
-
     elif is_file_bytes():
         file_bytes = get_value(IMG_FILE_BYTES)
+        file_bytes = file_bytes.encode('iso-8859-1')
         imgs = fipu_face.get_from_bytes(file_bytes, get_img_formats_list(), get_response_encoding())
         return create_response(imgs)
-
-    resp = jsonify({'message': 'No image in the request. Use {} in either form or json request'.format(ALLOWED_KEYS)})
+    resp = jsonify({'message': NO_IMAGE_ERROR})
     resp.status_code = 400
     return resp
 
@@ -151,6 +158,7 @@ def handle_image_exception(error):
 
 @app.errorhandler(Exception)
 def handle_exception(e):
+    print(e, type(e))
     bugsnag.notify(e)
     errors = dict()
     errors['errors'] = [{'message': 'An error has occurred while processing the image. Please try again in a few moments.', 'error_code': 'server_error'}]

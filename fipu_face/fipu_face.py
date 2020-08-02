@@ -1,5 +1,5 @@
 from fipu_face import retina_face as rf
-
+import binascii
 import time
 from fipu_face.utils import *
 from fipu_face.img_utils import *
@@ -302,6 +302,8 @@ def detect(frame, imcs=None):
 # Shortcut method to crop the image and covert it back to the given format
 def __do_detect(frame, img_formats, encoding):
     frames = detect(frame, [get_format(f) for f in img_formats])
+    if type(frames) != dict:
+        frames = {img_formats[0]: frames}
     for img_fmt in frames.keys():
         frames[img_fmt] = convert_img(frames[img_fmt], encoding)
     return frames
@@ -316,8 +318,11 @@ def get_from_file(file, img_formats, encoding):
 def get_from_base64(uri, img_formats, encoding):
     # Just in case the uri contains base64 prefix, split and take the last part
     encoded_data = uri.split('base64,')[-1]
-    img = cv2_read_img(base64.b64decode(encoded_data))
-    return __do_detect(img, img_formats, encoding)
+    try:
+        img = cv2_read_img(base64.b64decode(encoded_data))
+        return __do_detect(img, img_formats, encoding)
+    except binascii.Error:
+        raise_error(INVALID_IMAGE_FORMAT)
 
 
 # API method called when the file is uploaded as a field in bytes format
